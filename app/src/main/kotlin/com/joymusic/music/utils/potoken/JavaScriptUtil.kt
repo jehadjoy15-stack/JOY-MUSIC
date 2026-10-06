@@ -1,4 +1,4 @@
-package com.joymusic.music.utils.potoken
+﻿package com.joymusic.music.utils.potoken
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull

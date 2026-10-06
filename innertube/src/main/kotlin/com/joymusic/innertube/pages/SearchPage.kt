@@ -1,4 +1,4 @@
-package com.joymusic.innertube.pages
+﻿package com.joymusic.innertube.pages
 
 import com.joymusic.innertube.models.Album
 import com.joymusic.innertube.models.AlbumItem
@@ -11,7 +11,6 @@ import com.joymusic.innertube.models.PlaylistItem
 import com.joymusic.innertube.models.PodcastItem
 import com.joymusic.innertube.models.SongItem
 import com.joymusic.innertube.models.YTItem
-import com.joymusic.innertube.models.oddElements
 import com.joymusic.innertube.models.splitBySeparator
 import com.joymusic.innertube.utils.parseTime
 
@@ -21,7 +20,10 @@ data class SearchResult(
 )
 
 object SearchPage {
-    fun toYTItem(renderer: MusicResponsiveListItemRenderer): YTItem? {
+    fun toYTItem(
+        renderer: MusicResponsiveListItemRenderer,
+        fallbackArtists: List<Artist> = emptyList(),
+    ): YTItem? {
         val secondaryLine =
             renderer.flexColumns
                 .getOrNull(1)
@@ -29,18 +31,18 @@ object SearchPage {
                 ?.text
                 ?.runs
                 ?.splitBySeparator()
-                ?: return null
+                .orEmpty()
         return when {
-            // CRITICAL: Check isEpisode BEFORE isSong — both can match isSong (watchEndpoint or
+            // CRITICAL: Check isEpisode BEFORE isSong ΓÇö both can match isSong (watchEndpoint or
             // null navigationEndpoint), so episodes must be identified first.
             renderer.isEpisode -> {
                 val libraryTokens = PageHelper.extractLibraryTokensFromMenuItems(renderer.menu?.menuRenderer?.items)
 
                 // The subtitle line structure differs between filtered and unfiltered search:
-                //   Unfiltered: ["Episode", "·", "Jan 2025", "·", "Podcast Name", "·", "1:00:00"]
-                //     → secondaryLine = [["Episode"], ["Jan 2025"], ["Podcast Name"], ["1:00:00"]]
-                //   Filtered:   ["Jan 2025", "·", "Podcast Name"]
-                //     → secondaryLine = [["Jan 2025"], ["Podcast Name"]]
+                //   Unfiltered: ["Episode", "┬╖", "Jan 2025", "┬╖", "Podcast Name", "┬╖", "1:00:00"]
+                //     ΓåÆ secondaryLine = [["Episode"], ["Jan 2025"], ["Podcast Name"], ["1:00:00"]]
+                //   Filtered:   ["Jan 2025", "┬╖", "Podcast Name"]
+                //     ΓåÆ secondaryLine = [["Jan 2025"], ["Podcast Name"]]
                 //
                 // Strategy: locate the podcast section by its PODCAST_SHOW_DETAIL_PAGE link;
                 // the date is in the section immediately before it.
@@ -117,7 +119,8 @@ object SearchPage {
                 val metadataRuns = renderer.flexColumns
                     .drop(1)
                     .flatMap { it.musicResponsiveListItemFlexColumnRenderer.text?.runs.orEmpty() }
-                val artists = PageHelper.extractArtists(metadataRuns)
+                val artists = PageHelper.extractArtists(metadataRuns).ifEmpty { fallbackArtists }
+                val albumRun = PageHelper.extractRuns(renderer.flexColumns, "MUSIC_PAGE_TYPE_ALBUM").firstOrNull()
 
                 SongItem(
                     id = renderer.playlistItemData?.videoId
@@ -138,12 +141,12 @@ object SearchPage {
                             ?.runs
                             ?.firstOrNull()
                             ?.text ?: return null,
-                    artists = artists.ifEmpty { return null },
+                    artists = artists,
                     album =
-                        secondaryLine.getOrNull(1)?.firstOrNull()?.takeIf { it.navigationEndpoint?.browseEndpoint != null }?.let {
+                        albumRun?.let {
                             Album(
                                 name = it.text,
-                                id = it.navigationEndpoint?.browseEndpoint?.browseId!!,
+                                id = it.navigationEndpoint?.browseEndpoint?.browseId ?: return@let null,
                             )
                         },
                     duration = PageHelper.extractDuration(metadataRuns),
@@ -237,13 +240,7 @@ object SearchPage {
                             ?.runs
                             ?.firstOrNull()
                             ?.text ?: return null,
-                    artists =
-                        secondaryLine.getOrNull(1)?.oddElements()?.map {
-                            Artist(
-                                name = it.text,
-                                id = it.navigationEndpoint?.browseEndpoint?.browseId,
-                            )
-                        } ?: return null,
+                    artists = PageHelper.extractArtists(secondaryLine.getOrNull(1)),
                     year =
                         secondaryLine
                             .getOrNull(2)
@@ -273,12 +270,16 @@ object SearchPage {
                             ?.firstOrNull()
                             ?.text ?: return null,
                     author =
-                        secondaryLine.firstOrNull()?.firstOrNull()?.let {
-                            Artist(
-                                name = it.text,
-                                id = it.navigationEndpoint?.browseEndpoint?.browseId,
-                            )
-                        } ?: return null,
+                        PageHelper
+                            .extractArtists(
+                                renderer.flexColumns
+                                    .drop(1)
+                                    .flatMap {
+                                        it.musicResponsiveListItemFlexColumnRenderer.text
+                                            ?.runs
+                                            .orEmpty()
+                                    },
+                            ).firstOrNull(),
                     songCountText =
                         renderer.flexColumns
                             .getOrNull(1)
@@ -327,12 +328,11 @@ object SearchPage {
                             ?.firstOrNull()
                             ?.text ?: return null,
                     author =
-                        secondaryLine.firstOrNull()?.firstOrNull()?.let {
-                            Artist(
-                                name = it.text,
-                                id = it.navigationEndpoint?.browseEndpoint?.browseId,
-                            )
-                        },
+                        PageHelper.extractArtists(
+                            renderer.flexColumns
+                                .drop(1)
+                                .flatMap { it.musicResponsiveListItemFlexColumnRenderer.text?.runs.orEmpty() },
+                        ).firstOrNull(),
                     episodeCountText =
                         renderer.flexColumns
                             .getOrNull(1)

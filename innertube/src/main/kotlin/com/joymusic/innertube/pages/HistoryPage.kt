@@ -1,12 +1,10 @@
-package com.joymusic.innertube.pages
+﻿package com.joymusic.innertube.pages
 
 import com.joymusic.innertube.models.Album
-import com.joymusic.innertube.models.Artist
 import com.joymusic.innertube.models.MusicResponsiveListItemRenderer
 import com.joymusic.innertube.models.MusicShelfRenderer
 import com.joymusic.innertube.models.SongItem
 import com.joymusic.innertube.models.getItems
-import com.joymusic.innertube.models.oddElements
 import com.joymusic.innertube.models.splitBySeparator
 import com.joymusic.innertube.utils.parseTime
 
@@ -42,23 +40,31 @@ data class HistoryPage(
 
             return SongItem(
                 id = renderer.videoId ?: return null,
-                title = renderer.flexColumns.firstOrNull()
-                    ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull()
-                    ?.text ?: return null,
-                artists = secondaryLineRuns?.firstOrNull()?.oddElements()?.map {
-                    Artist(
-                        name = it.text,
-                        id = it.navigationEndpoint?.browseEndpoint?.browseId
-                    )
-                } ?: emptyList(),
-                album = renderer.flexColumns.getOrNull(3)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull()?.let {
-                    Album(
-                        name = it.text,
-                        id = it.navigationEndpoint?.browseEndpoint?.browseId ?: return@let null
-                    )
-                },
-                duration = renderer.fixedColumns?.firstOrNull()?.musicResponsiveListItemFlexColumnRenderer
-                    ?.text?.runs?.firstOrNull()?.text?.parseTime(),
+                title =
+                    renderer.flexColumns
+                        .firstOrNull()
+                        ?.musicResponsiveListItemFlexColumnRenderer
+                        ?.text
+                        ?.runs
+                        ?.firstOrNull()
+                        ?.text ?: return null,
+                artists = PageHelper.extractArtists(secondaryLineRuns?.firstOrNull()),
+                album =
+                    renderer.flexColumns.getOrNull(3)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull()?.let {
+                        Album(
+                            name = it.text,
+                            id = it.navigationEndpoint?.browseEndpoint?.browseId ?: return@let null,
+                        )
+                    },
+                duration =
+                    renderer.fixedColumns
+                        ?.firstOrNull()
+                        ?.musicResponsiveListItemFlexColumnRenderer
+                        ?.text
+                        ?.runs
+                        ?.firstOrNull()
+                        ?.text
+                        ?.parseTime(),
                 musicVideoType = renderer.musicVideoType,
                 thumbnail = renderer.thumbnail?.getThumbnailUrl() ?: return null,
                 explicit = renderer.badges?.find {

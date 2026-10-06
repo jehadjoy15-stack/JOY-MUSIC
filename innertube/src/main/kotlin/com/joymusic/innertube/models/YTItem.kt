@@ -1,4 +1,4 @@
-package com.joymusic.innertube.models
+﻿package com.joymusic.innertube.models
 
 import com.joymusic.innertube.models.WatchEndpoint.WatchEndpointMusicSupportedConfigs.WatchEndpointMusicConfig.Companion.MUSIC_VIDEO_TYPE_ATV
 

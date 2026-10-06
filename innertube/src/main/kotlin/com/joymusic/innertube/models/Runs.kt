@@ -1,4 +1,4 @@
-package com.joymusic.innertube.models
+﻿package com.joymusic.innertube.models
 
 import kotlinx.serialization.Serializable
 
@@ -17,7 +17,7 @@ fun List<Run>.splitBySeparator(): List<List<Run>> {
     val res = mutableListOf<List<Run>>()
     var tmp = mutableListOf<Run>()
     forEach { run ->
-        if (run.text.trim() == "•") {
+        if (run.text.trim() == "ΓÇó") {
             res.add(tmp)
             tmp = mutableListOf()
         } else {
@@ -46,7 +46,7 @@ fun List<Run>.splitArtistsByConjunction(): List<Run> {
                 }
             }
         } else if (text.trim().equals("&", ignoreCase = true) ||
-                text.trim().equals("•") ||
+                text.trim().equals("ΓÇó") ||
                 words.any { text.trim().equals(it, ignoreCase = true) }
         ) {
         } else {

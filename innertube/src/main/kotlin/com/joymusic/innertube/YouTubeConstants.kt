@@ -1,4 +1,4 @@
-package com.joymusic.innertube
+﻿package com.joymusic.innertube
 
 object YouTubeConstants {
     const val DEFAULT_TOP_RESULT = "Top result"

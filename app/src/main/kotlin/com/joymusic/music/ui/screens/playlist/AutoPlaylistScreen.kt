@@ -308,7 +308,8 @@ fun AutoPlaylistScreen(
                                 val result =
                                     YouTube.uploadSong(
                                         filename = fileName,
-                                        data = data,
+                                        contentLength = data.size.toLong(),
+                                        content = { data.inputStream() },
                                         onProgress = { progress ->
                                             uploadProgress = progress
                                         },

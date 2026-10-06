@@ -1,8 +1,3 @@
-/**
- * JOY MUSIC Project (C) 2026
- * Licensed under GPL-3.0 | See git history for contributors
- */
-
 package com.joymusic.music.ui.utils
 
 import android.content.ClipData
@@ -36,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,14 +46,11 @@ import com.joymusic.music.constants.LoudnessLevelKey
 import com.joymusic.music.db.entities.FormatEntity
 import com.joymusic.music.db.entities.Song
 import com.joymusic.music.ui.component.Material3SettingsGroup
-import com.joymusic.music.utils.cipher.CipherDeobfuscator
-import com.joymusic.music.utils.cipher.PlayerDatesStore
 import com.joymusic.music.ui.component.Material3SettingsItem
 import com.joymusic.music.ui.component.shimmer.ShimmerHost
 import com.joymusic.music.ui.component.shimmer.TextPlaceholder
 import com.joymusic.music.utils.ArtistNameAliases
 import com.joymusic.music.utils.rememberEnumPreference
-import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun getLoudnessLevelLabel(loudnessLevel: LoudnessLevel): String {
@@ -70,26 +63,29 @@ fun getLoudnessLevelLabel(loudnessLevel: LoudnessLevel): String {
 }
 
 @Composable
-fun ShowMediaInfo(videoId: String) {
-    if (videoId.isBlank() || videoId.isEmpty()) return
-
-    val windowInsets = WindowInsets.systemBars
+fun ShowMediaInfo(
+    videoId: String,
+    windowInsets: WindowInsets = WindowInsets.systemBars
+) {
+    val context = LocalContext.current
+    val database = LocalDatabase.current
+    val artistNameAliases = LocalArtistNameAliases.current
+    val playerConnection = LocalPlayerConnection.current
+    val currentStreamClient by playerConnection?.currentStreamClient?.collectAsState() ?: remember { mutableStateOf(null) }
 
     var info by remember {
         mutableStateOf<MediaInfo?>(null)
     }
 
-    val database = LocalDatabase.current
-    var song by remember { mutableStateOf<Song?>(null) }
+    var song by remember {
+        mutableStateOf<Song?>(null)
+    }
 
-    var currentFormat by remember { mutableStateOf<FormatEntity?>(null) }
+    var currentFormat by remember {
+        mutableStateOf<FormatEntity?>(null)
+    }
 
-    val playerConnection = LocalPlayerConnection.current
-    val currentStreamClient by playerConnection?.currentStreamClient?.collectAsState() ?: remember { mutableStateOf(null) }
-    val context = LocalContext.current
-    val artistNameAliases = LocalArtistNameAliases.current
-
-    val loudnessLevel by rememberEnumPreference(
+    val (loudnessLevel) = rememberEnumPreference(
         LoudnessLevelKey,
         defaultValue = LoudnessLevel.BALANCED
     )
@@ -149,8 +145,6 @@ fun ShowMediaInfo(videoId: String) {
                         R.drawable.media3_icon_thumb_down_unfilled,
                         R.drawable.key,
                         R.drawable.play,
-                        R.drawable.lock,
-                        R.drawable.key_vertical,
                         R.drawable.info,
                         R.drawable.radio,
                         R.drawable.gradient,
@@ -161,13 +155,6 @@ fun ShowMediaInfo(videoId: String) {
                         R.drawable.content_copy
                     )
 
-                    val notApplicable = stringResource(R.string.not_applicable)
-                    // Player hash + cipher support date apply only to deciphered web clients;
-                    // direct-URL clients (VISIONOS/ANDROID_VR/IOS) never run the cipher.
-                    val isWebStream = currentStreamClient in setOf("WEB_REMIX", "WEB_CREATOR", "TVHTML5", "WEB")
-                    // Read the moving global once so the hash row and its cipher-date row stay consistent.
-                    val playerHash = if (isWebStream) CipherDeobfuscator.lastUsedPlayerHash else null
-
                     val measuredLufs: Double? = currentFormat?.perceptualLoudnessDb ?: currentFormat?.loudnessDb?.let { it + LoudnessLevel.AGGRESSIVE.targetLufs }
 
                     val extendedList = if (currentFormat != null) {
@@ -177,10 +164,6 @@ fun ShowMediaInfo(videoId: String) {
                             stringResource(R.string.dislikes) to info?.dislike?.let(::numberFormatter).orEmpty(),
                             "Itag" to currentFormat?.itag?.toString(),
                             stringResource(R.string.stream_client) to currentStreamClient,
-                            stringResource(R.string.format_player_hash) to
-                                    (if (isWebStream) playerHash else notApplicable),
-                            stringResource(R.string.format_cipher_support_added) to
-                                    (if (isWebStream) PlayerDatesStore.get(playerHash) else notApplicable),
                             stringResource(R.string.mime_type) to currentFormat?.mimeType,
                             stringResource(R.string.codecs) to currentFormat?.codecs,
                             stringResource(R.string.bitrate) to currentFormat?.bitrate?.let { "${it / 1000} Kbps" },

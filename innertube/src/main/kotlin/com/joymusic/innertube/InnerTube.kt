@@ -23,24 +23,37 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.utils.io.jvm.javaio.toByteReadChannel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.net.Proxy
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**
- * Compatibility facade that keeps JOY MUSIC's parsed response models while InnerTubeX owns
+ * Compatibility facade that keeps Metrolist's parsed response models while InnerTubeX owns
  * YouTube request construction, session handling, retries, and authenticated mutations.
  */
-class InnerTube {
+class InnerTube(
+    client: HttpClient? = null,
+) {
     private var configuredProxy: Proxy? = null
     private var configuredProxyAuth: String? = null
-    private var httpClient = createClient()
+    private var httpClient = client ?: createClient()
     private var innerTubeX = InnerTubeX(httpClient)
+    private var transportGeneration = 0L
+
+    class ExtractionTransport internal constructor(
+        val innerTube: InnerTubeX,
+        val httpClient: HttpClient,
+        val generation: Long,
+    )
 
     var locale: YouTubeLocale
         get() = innerTubeX.locale
@@ -94,6 +107,7 @@ class InnerTube {
             innerTubeX.useLoginForBrowse = value
         }
 
+    @Synchronized
     private fun recreateTransport() {
         val session = innerTubeX.sessionSnapshot()
         innerTubeX.close()
@@ -111,7 +125,16 @@ class InnerTube {
                 )
                 replacement.regionOverrideActive = session.regionOverrideActive
             }
+        transportGeneration++
     }
+
+    @Synchronized
+    fun extractionTransport(): ExtractionTransport =
+        ExtractionTransport(
+            innerTube = innerTubeX,
+            httpClient = httpClient,
+            generation = transportGeneration,
+        )
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun createClient() =
@@ -173,7 +196,8 @@ class InnerTube {
         query: String? = null,
         params: String? = null,
         continuation: String? = null,
-    ) = innerTubeX.search(client, query, params, continuation)
+        setLogin: Boolean = false,
+    ) = innerTubeX.search(client, query, params, continuation, setLogin = setLogin)
 
     suspend fun player(
         client: YouTubeClient,
@@ -216,7 +240,7 @@ class InnerTube {
     suspend fun getSearchSuggestions(
         client: YouTubeClient,
         input: String,
-    ) = innerTubeX.getSearchSuggestions(client, input)
+    ) = innerTubeX.getSearchSuggestions(client, input, setLogin = false)
 
     suspend fun getQueue(
         client: YouTubeClient,
@@ -322,9 +346,14 @@ class InnerTube {
 
     suspend fun uploadSong(
         filename: String,
-        data: ByteArray,
-        onProgress: ((Float) -> Unit)? = null,
-    ) = innerTubeX.uploadSong(filename, data, onProgress).requireSuccess("uploadSong")
+        contentLength: Long,
+        content: () -> InputStream,
+    ) = withContext(Dispatchers.IO) {
+        innerTubeX
+            .uploadSong(filename, contentLength) {
+                content().toByteReadChannel(Dispatchers.IO)
+            }.requireSuccess("uploadSong")
+    }
 
     suspend fun deletePrivatelyOwnedEntity(entityId: String) =
         innerTubeX

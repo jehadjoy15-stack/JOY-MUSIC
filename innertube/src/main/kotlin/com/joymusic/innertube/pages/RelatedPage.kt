@@ -1,8 +1,7 @@
-package com.joymusic.innertube.pages
+﻿package com.joymusic.innertube.pages
 
 import com.joymusic.innertube.models.Album
 import com.joymusic.innertube.models.AlbumItem
-import com.joymusic.innertube.models.Artist
 import com.joymusic.innertube.models.ArtistItem
 import com.joymusic.innertube.models.MusicResponsiveListItemRenderer
 import com.joymusic.innertube.models.MusicTwoRowItemRenderer
@@ -10,7 +9,6 @@ import com.joymusic.innertube.models.PlaylistItem
 import com.joymusic.innertube.models.PodcastItem
 import com.joymusic.innertube.models.SongItem
 import com.joymusic.innertube.models.YTItem
-import com.joymusic.innertube.models.oddElements
 import com.joymusic.innertube.models.splitBySeparator
 import com.joymusic.innertube.utils.parseTime
 
@@ -43,18 +41,12 @@ data class RelatedPage(
                         ?.runs
                         ?.firstOrNull()
                         ?.text ?: return null,
-                artists =
-                    secondaryLineRuns?.firstOrNull()?.oddElements()?.map {
-                        Artist(
-                            name = it.text,
-                            id = it.navigationEndpoint?.browseEndpoint?.browseId,
-                        )
-                    } ?: return null,
+                artists = PageHelper.extractArtists(secondaryLineRuns?.firstOrNull()),
                 album =
                     renderer.flexColumns.getOrNull(2)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull()?.let {
                         Album(
                             name = it.text,
-                            id = it.navigationEndpoint?.browseEndpoint?.browseId ?: return null,
+                            id = it.navigationEndpoint?.browseEndpoint?.browseId ?: return@let null,
                         )
                     },
                 duration = renderer.fixedColumns?.firstOrNull()
@@ -89,12 +81,7 @@ data class RelatedPage(
                             renderer.title.runs
                                 ?.firstOrNull()
                                 ?.text ?: return null,
-                        artists = listOfNotNull(Artist(
-                                name = "",
-                                id = renderer.menu?.menuRenderer?.items?.find {
-                                    it.menuNavigationItemRenderer?.icon?.iconType == "ARTIST"
-                                }?.menuNavigationItemRenderer?.navigationEndpoint?.browseEndpoint?.browseId,
-                            )),
+                        artists = PageHelper.extractArtists(renderer.subtitle?.runs),
                         year =
                             renderer.subtitle
                                 ?.runs
@@ -117,13 +104,13 @@ data class RelatedPage(
                             renderer.title.runs
                                 ?.firstOrNull()
                                 ?.text ?: return null,
-                        author = Artist(
-                            name = renderer.subtitle?.runs?.lastOrNull()?.text ?: return null,
-                            id = null
-                        ),
-                        songCountText = renderer.subtitle.runs.findLast {
-                            it.text.any { c -> c.isDigit() } && !it.text.contains("view", ignoreCase = true)
-                        }?.text,
+                        author = PageHelper.extractArtists(renderer.subtitle?.runs).firstOrNull(),
+                        songCountText =
+                            renderer.subtitle
+                                ?.runs
+                                ?.findLast {
+                                    it.text.any { c -> c.isDigit() } && !it.text.contains("view", ignoreCase = true)
+                                }?.text,
                         thumbnail = renderer.thumbnailRenderer.getThumbnailUrl() ?: return null,
                         playEndpoint =
                             renderer.thumbnailOverlay
@@ -178,14 +165,16 @@ data class RelatedPage(
                 renderer.isPodcast -> {
                     PodcastItem(
                         id = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
-                        title = renderer.title.runs?.firstOrNull()?.text ?: return null,
-                        author = renderer.subtitle?.runs?.firstOrNull()?.let {
-                            Artist(
-                                name = it.text,
-                                id = it.navigationEndpoint?.browseEndpoint?.browseId
-                            )
-                        },
-                        episodeCountText = renderer.subtitle?.runs?.lastOrNull()?.text,
+                        title =
+                            renderer.title.runs
+                                ?.firstOrNull()
+                                ?.text ?: return null,
+                        author = PodcastPage.extractPodcastByline(renderer.subtitle?.runs).firstOrNull(),
+                        episodeCountText =
+                            renderer.subtitle
+                                ?.runs
+                                ?.lastOrNull()
+                                ?.text,
                         thumbnail = renderer.thumbnailRenderer.getThumbnailUrl(),
                         playEndpoint = renderer.thumbnailOverlay
                             ?.musicItemThumbnailOverlayRenderer?.content

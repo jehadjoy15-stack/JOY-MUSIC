@@ -1,4 +1,4 @@
-package com.joymusic.music.utils.potoken
+﻿package com.joymusic.music.utils.potoken
 
 class PoTokenResult(
     val playerRequestPoToken: String,

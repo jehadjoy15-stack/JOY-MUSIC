@@ -190,7 +190,7 @@ object AudioTrimmer {
             ?: throw IllegalStateException("ConnectivityManager unavailable")
 
         Timber.tag(TAG).d("Fetching player response for $songId")
-        val playbackData = YTPlayerUtils.playerResponseForPlayback(
+        val playbackData = InnerTubeXPlayer.playerResponseForPlayback(
             videoId = songId,
             audioQuality = AudioQuality.HIGH,
             connectivityManager = connectivityManager,
@@ -602,11 +602,10 @@ object AudioTrimmer {
                 if (!extracted) {
                     val connectivityManager = context.getSystemService<ConnectivityManager>()
                         ?: error("ConnectivityManager unavailable")
-                    val playbackData = YTPlayerUtils.playerResponseForPlayback(
+                    val playbackData = InnerTubeXPlayer.playerResponseForPlayback(
                         videoId = songId,
                         audioQuality = AudioQuality.HIGH,
                         connectivityManager = connectivityManager,
-                        contentHints = com.joymusic.innertube.strategy.ContentHints(),
                     ).getOrThrow()
 
                     downloadFastWithRanges(

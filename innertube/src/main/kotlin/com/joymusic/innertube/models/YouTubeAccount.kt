@@ -1,4 +1,4 @@
-package com.joymusic.innertube.models
+﻿package com.joymusic.innertube.models
 
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement

@@ -1,8 +1,7 @@
-package com.joymusic.innertube.pages
+﻿package com.joymusic.innertube.pages
 
 import com.joymusic.innertube.models.Album
 import com.joymusic.innertube.models.AlbumItem
-import com.joymusic.innertube.models.Artist
 import com.joymusic.innertube.models.ArtistItem
 import com.joymusic.innertube.models.EpisodeItem
 import com.joymusic.innertube.models.MusicResponsiveListItemRenderer
@@ -10,7 +9,6 @@ import com.joymusic.innertube.models.PlaylistItem
 import com.joymusic.innertube.models.PodcastItem
 import com.joymusic.innertube.models.SongItem
 import com.joymusic.innertube.models.YTItem
-import com.joymusic.innertube.models.oddElements
 import com.joymusic.innertube.models.splitBySeparator
 import com.joymusic.innertube.utils.parseTime
 
@@ -35,12 +33,7 @@ object SearchSuggestionPage {
                             ?.runs
                             ?.firstOrNull()
                             ?.text ?: return null,
-                    author = secondaryLine?.getOrNull(0)?.firstOrNull()?.let {
-                        Artist(
-                            name = it.text,
-                            id = it.navigationEndpoint?.browseEndpoint?.browseId,
-                        )
-                    },
+                    author = PodcastPage.extractPodcastByline(secondaryLine?.getOrNull(0)).firstOrNull(),
                     episodeCountText = secondaryLine?.lastOrNull()?.firstOrNull()?.text,
                     thumbnail = renderer.thumbnail?.getThumbnailUrl() ?: return null,
                     playEndpoint = renderer.overlay
@@ -121,32 +114,30 @@ object SearchSuggestionPage {
                             ?.runs
                             ?.firstOrNull()
                             ?.text ?: return null,
-                    author = secondaryLine?.firstOrNull()?.firstOrNull()?.let {
-                        Artist(
-                            name = it.text,
-                            id = it.navigationEndpoint?.browseEndpoint?.browseId,
-                        )
-                    } ?: return null,
-                    songCountText = secondaryLine.lastOrNull()?.firstOrNull()?.text,
+                    author = PlaylistPage.ownerFromByline(secondaryLine?.firstOrNull()),
+                    songCountText = secondaryLine?.lastOrNull()?.firstOrNull()?.text,
                     thumbnail = renderer.thumbnail?.getThumbnailUrl() ?: return null,
-                    playEndpoint = renderer.overlay
-                        ?.musicItemThumbnailOverlayRenderer
-                        ?.content
-                        ?.musicPlayButtonRenderer
-                        ?.playNavigationEndpoint
-                        ?.watchPlaylistEndpoint ?: return null,
-                    shuffleEndpoint = renderer.menu
-                        ?.menuRenderer
-                        ?.items
-                        ?.find { it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE" }
-                        ?.menuNavigationItemRenderer
-                        ?.navigationEndpoint
-                        ?.watchPlaylistEndpoint ?: return null,
-                    radioEndpoint = renderer.menu.menuRenderer.items
-                        .find { it.menuNavigationItemRenderer?.icon?.iconType == "MIX" }
-                        ?.menuNavigationItemRenderer
-                        ?.navigationEndpoint
-                        ?.watchPlaylistEndpoint ?: return null,
+                    playEndpoint =
+                        renderer.overlay
+                            ?.musicItemThumbnailOverlayRenderer
+                            ?.content
+                            ?.musicPlayButtonRenderer
+                            ?.playNavigationEndpoint
+                            ?.watchPlaylistEndpoint ?: return null,
+                    shuffleEndpoint =
+                        renderer.menu
+                            ?.menuRenderer
+                            ?.items
+                            ?.find { it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE" }
+                            ?.menuNavigationItemRenderer
+                            ?.navigationEndpoint
+                            ?.watchPlaylistEndpoint ?: return null,
+                    radioEndpoint =
+                        renderer.menu.menuRenderer.items
+                            .find { it.menuNavigationItemRenderer?.icon?.iconType == "MIX" }
+                            ?.menuNavigationItemRenderer
+                            ?.navigationEndpoint
+                            ?.watchPlaylistEndpoint ?: return null,
                 )
             }
             renderer.isSong -> {
@@ -164,7 +155,7 @@ object SearchSuggestionPage {
                             ?.runs
                             ?.firstOrNull()
                             ?.text ?: return null,
-                    artists = artists.ifEmpty { return null },
+                    artists = artists,
                     album =
                         renderer.flexColumns
                             .getOrNull(
@@ -176,7 +167,7 @@ object SearchSuggestionPage {
                             ?.let {
                                 Album(
                                     name = it.text,
-                                    id = it.navigationEndpoint?.browseEndpoint?.browseId ?: return null,
+                                    id = it.navigationEndpoint?.browseEndpoint?.browseId ?: return@let null,
                                 )
                             },
                     duration = PageHelper.extractDuration(metadataRuns),
@@ -276,13 +267,7 @@ object SearchSuggestionPage {
                             ?.runs
                             ?.firstOrNull()
                             ?.text ?: return null,
-                    artists =
-                        secondaryLine.getOrNull(1)?.oddElements()?.map {
-                            Artist(
-                                name = it.text,
-                                id = it.navigationEndpoint?.browseEndpoint?.browseId,
-                            )
-                        } ?: return null,
+                    artists = PageHelper.extractArtists(secondaryLine.getOrNull(1)),
                     year =
                         secondaryLine
                             .lastOrNull()

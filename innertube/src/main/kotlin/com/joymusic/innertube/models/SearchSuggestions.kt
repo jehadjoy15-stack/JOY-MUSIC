@@ -1,4 +1,4 @@
-package com.joymusic.innertube.models
+﻿package com.joymusic.innertube.models
 
 data class SearchSuggestions(
     val queries: List<String>,

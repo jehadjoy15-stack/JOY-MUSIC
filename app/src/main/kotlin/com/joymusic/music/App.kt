@@ -35,8 +35,7 @@ import com.joymusic.music.extensions.toInetSocketAddress
 import com.joymusic.music.discord.DiscordRpcManager
 import com.joymusic.music.utils.CrashHandler
 import com.joymusic.music.utils.ArtistNameAliases
-import com.joymusic.music.utils.YTPlayerUtils
-import com.joymusic.music.utils.cipher.CipherDeobfuscator
+import com.joymusic.music.utils.InnerTubeXPlayer
 import com.joymusic.music.utils.dataStore
 import com.joymusic.music.utils.safeDataStoreEdit
 import com.joymusic.music.utils.reportException
@@ -89,12 +88,11 @@ class App :
             Timber.e(e, "Failed to ensure DataStore directory")
         }
 
-        // Plant logging BEFORE cipher init so the synchronous config-store load
-        // (bundled asset + cached overlay) is captured, not just the async remote refresh.
+        // Plant logging before extraction services initialize.
         Timber.plant(Timber.DebugTree())
 
-        // Initialize cipher deobfuscator for WEB_REMIX streaming
-        CipherDeobfuscator.initialize(this)
+        // Initialize InnerTubeX player
+        InnerTubeXPlayer.initialize(this)
 
         // Pre-initialize Discord RPC manager so connection is established before the first song plays
         runCatching {
@@ -106,23 +104,11 @@ class App :
             cachedCoilCacheSize = dataStore.data.map { it[MaxImageCacheSizeKey] ?: 512 }.first()
         }
 
-        // تهيئة إعدادات التطبيق عند الإقلاع
+        // Initialize settings on startup
         applicationScope.launch {
-            // Apply settings (incl. YouTube.proxy) FIRST: the cipher/PoToken OkHttpClients are built
-            // once and cached, so warming them before the proxy is set would snapshot a null proxy and
-            // bypass a configured proxy for the whole session. Warm-up is launched only after this.
             initializeSettings()
 
-            // Warm the cipher WebView off the first-play critical path. It needs no session, so kick it
-            // as soon as settings settle (don't gate it behind visitorData — that's the bigger cold
-            // cost). Best-effort; on failure the WebView is created lazily on first play.
-            launch(Dispatchers.IO) {
-                delay(1500)
-                runCatching { CipherDeobfuscator.prewarm() }
-            }
-
-            // Warm the PoToken/BotGuard generator (the ~2-5s cold cost) once a session (visitorData) is
-            // available; gate only this half on it. Best-effort and delayed so it never competes with startup.
+            // Warm the PoToken generator once visitorData is available
             launch(Dispatchers.IO) {
                 delay(2500)
                 var waitedMs = 0
@@ -130,7 +116,7 @@ class App :
                     delay(500)
                     waitedMs += 500
                 }
-                runCatching { YTPlayerUtils.prewarmPoToken() }
+                runCatching { InnerTubeXPlayer.prewarm() }
             }
 
             observeSettingsChanges()

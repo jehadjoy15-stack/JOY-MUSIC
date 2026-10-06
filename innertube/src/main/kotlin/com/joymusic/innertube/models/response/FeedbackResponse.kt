@@ -1,4 +1,4 @@
-package com.joymusic.innertube.models.response
+﻿package com.joymusic.innertube.models.response
 
 import kotlinx.serialization.Serializable
 

@@ -1,17 +1,13 @@
-package com.joymusic.innertube.pages
+﻿package com.joymusic.innertube.pages
 
 import com.joymusic.innertube.models.Album
 import com.joymusic.innertube.models.AlbumItem
-import com.joymusic.innertube.models.Artist
 import com.joymusic.innertube.models.MusicResponsiveListItemRenderer
 import com.joymusic.innertube.models.MusicTwoRowItemRenderer
 import com.joymusic.innertube.models.PlaylistItem
 import com.joymusic.innertube.models.SongItem
 import com.joymusic.innertube.models.YTItem
-import com.joymusic.innertube.models.splitArtistsByConjunction
-import com.joymusic.innertube.models.splitBySeparator
 import com.joymusic.innertube.utils.parseTime
-import timber.log.Timber
 
 data class ArtistItemsPage(
     val title: String,
@@ -20,21 +16,14 @@ data class ArtistItemsPage(
 ) {
     companion object {
         fun fromMusicResponsiveListItemRenderer(renderer: MusicResponsiveListItemRenderer): SongItem? {
-            val artistRuns = renderer.flexColumns
-                .getOrNull(1)
-                ?.musicResponsiveListItemFlexColumnRenderer
-                ?.text
-                ?.runs
-                ?.splitBySeparator()
-                ?.getOrNull(0)
-                ?.splitArtistsByConjunction()
-                ?.filter { it.text.isNotBlank() && it.text != "&" && it.text != "," }
-                ?.map { run ->
-                    Artist(
-                        name = run.text.trim(),
-                        id = run.navigationEndpoint?.browseEndpoint?.browseId
-                    )
-                }
+            val artists =
+                PageHelper.extractArtists(
+                    renderer.flexColumns
+                        .getOrNull(1)
+                        ?.musicResponsiveListItemFlexColumnRenderer
+                        ?.text
+                        ?.runs,
+                )
 
             // Extract album from last flexColumn (like SimpMusic does)
             val album = renderer.flexColumns.lastOrNull()
@@ -65,12 +54,17 @@ data class ArtistItemsPage(
                 title = renderer.flexColumns.firstOrNull()
                     ?.musicResponsiveListItemFlexColumnRenderer?.text
                     ?.runs?.firstOrNull()?.text ?: return null,
-                artists = artistRuns ?: return null,
+                artists = artists,
                 album = album,
-                duration = renderer.fixedColumns?.firstOrNull()
-                    ?.musicResponsiveListItemFlexColumnRenderer?.text
-                    ?.runs?.firstOrNull()
-                    ?.text?.parseTime(),
+                duration =
+                    renderer.fixedColumns
+                        ?.firstOrNull()
+                        ?.musicResponsiveListItemFlexColumnRenderer
+                        ?.text
+                        ?.runs
+                        ?.firstOrNull()
+                        ?.text
+                        ?.parseTime(),
                 musicVideoType = renderer.musicVideoType,
                 thumbnail = renderer.thumbnail?.getThumbnailUrl() ?: return null,
                 explicit = renderer.badges?.find {
@@ -102,27 +96,12 @@ data class ArtistItemsPage(
                 renderer.isSong -> {
                     val title = renderer.title.runs?.firstOrNull()?.text ?: return null
                     val videoId = renderer.navigationEndpoint.watchEndpoint?.videoId ?: return null
-                    val subtitleRuns = renderer.subtitle?.runs ?: return null
-                    val expandedRuns = subtitleRuns.splitArtistsByConjunction()
-                    val artistRuns = expandedRuns.filter { run ->
-                        run.text.isNotBlank() && run.text != "&" && run.text != "," &&
-                        run.navigationEndpoint?.browseEndpoint?.browseId?.startsWith("UC") == true
-                    }
-                    val artists = artistRuns.map { run ->
-                        Artist(
-                            name = run.text.trim(),
-                            id = run.navigationEndpoint?.browseEndpoint?.browseId
-                        )
-                    }
-                    
-                    if (artists.isEmpty()) {
-                        Timber.w("ArtistItemsPage.fromMusicTwoRowItemRenderer: Song '$title' (id=$videoId) - SUBTITLE RUNS EXIST but parsing returned EMPTY")
-                    }
+                    val artists = PageHelper.extractArtists(renderer.subtitle?.runs)
 
                     SongItem(
                         id = videoId,
                         title = title,
-                        artists = artists.ifEmpty { null } ?: return null,
+                        artists = artists,
                         album = null,
                         duration = null,
                         musicVideoType = renderer.musicVideoType,
@@ -133,12 +112,7 @@ data class ArtistItemsPage(
                 renderer.isPlaylist -> PlaylistItem(
                     id = renderer.navigationEndpoint.browseEndpoint?.browseId?.removePrefix("VL") ?: return null,
                     title = renderer.title.runs?.firstOrNull()?.text ?: return null,
-                    author = renderer.subtitle?.runs?.firstOrNull()?.let {
-                        Artist(
-                            name = it.text,
-                            id = it.navigationEndpoint?.browseEndpoint?.browseId
-                        )
-                    },
+                    author = PlaylistPage.ownerFromByline(renderer.subtitle?.runs),
                     songCountText = renderer.subtitle?.runs?.getOrNull(4)?.text,
                     thumbnail = renderer.thumbnailRenderer.getThumbnailUrl() ?: return null,
                     playEndpoint = renderer.thumbnailOverlay

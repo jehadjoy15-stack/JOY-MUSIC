@@ -93,7 +93,7 @@ import androidx.media3.session.SessionToken
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.MoreExecutors
 import com.joymusic.innertube.YouTube
-import com.joymusic.innertube.strategy.ContentHints
+import com.metrolist.innertubex.extraction.ContentHints
 import com.joymusic.innertube.models.SongItem
 import com.joymusic.innertube.models.WatchEndpoint
 import com.joymusic.lastfm.LastFM
@@ -215,8 +215,7 @@ import com.joymusic.music.utils.ScrobbleManager
 import com.joymusic.music.utils.SyncUtils
 import com.joymusic.music.utils.getArtistSeparator
 import com.joymusic.music.utils.joinToArtistString
-import com.joymusic.music.utils.YTPlayerUtils
-import com.joymusic.music.utils.cipher.CipherDeobfuscator
+import com.joymusic.music.utils.InnerTubeXPlayer
 import com.joymusic.music.utils.dataStore
 import com.joymusic.music.utils.get
 import com.joymusic.music.utils.reportException
@@ -1172,24 +1171,6 @@ class MusicService :
         scope.launch {
             dataStore.data.map { it[AutoLoadMoreKey] ?: true }.distinctUntilChanged().collect { cachedAutoLoadMore = it }
         }
-        // Keep YTPlayerUtils in sync with the stream source toggles (Settings → Stream sources).
-        // Map to the derived set + distinctUntilChanged so an unrelated preference write doesn't
-        // rebuild the set and rewrite the @Volatile field on every DataStore emission.
-        scope.launch {
-            dataStore.data
-                .map { prefs ->
-                    buildSet {
-                        if (prefs[StreamSourceWebRemixKey] == false) add("WEB_REMIX")
-                        if (prefs[StreamSourceTVHTML5Key] == false) add("TVHTML5")
-                        if (prefs[StreamSourceAndroidVRKey] == false) add("ANDROID_VR")
-                        if (prefs[StreamSourceVisionOSKey] == false) add("VISIONOS")
-                        if (prefs[StreamSourceWebCreatorKey] == false) add("WEB_CREATOR")
-                    }
-                }
-                .distinctUntilChanged()
-                .collect { YTPlayerUtils.disabledStreamClients = it }
-        }
-
         if (startupPrefs!![PersistentQueueKey] ?: true) {
             val queueFile = filesDir.resolve(PERSISTENT_QUEUE_FILE)
             if (queueFile.exists()) {
@@ -1655,7 +1636,7 @@ class MusicService :
      */
     private suspend fun recoverSong(
         mediaId: String,
-        playbackData: YTPlayerUtils.PlaybackData? = null,
+        playbackData: InnerTubeXPlayer.PlaybackData? = null,
     ) {
         if (mediaId.startsWith("content://") || mediaId.startsWith("file://") || mediaId.startsWith("local_")) return
         val song = database.song(mediaId).first()
@@ -1672,11 +1653,8 @@ class MusicService :
             song?.song?.duration?.takeIf { it != -1 }
                 ?: mediaMetadata?.duration?.takeIf { it != -1 }
                 ?: (
-                    playbackData?.videoDetails ?: YTPlayerUtils
-                        .playerResponseForMetadata(mediaId)
-                        .getOrNull()
-                        ?.videoDetails
-                )?.lengthSeconds?.toInt()
+                    playbackData?.videoDetails
+                )?.lengthSeconds?.toIntOrNull()
                 ?: -1
 
         database.query {
@@ -1719,18 +1697,10 @@ class MusicService :
     /**
      * Launches [recoverSong] for [mediaId] unless a call for the same mediaId is
      * already in flight, in which case this is a no-op.
-     *
-     * recoverSong() is called from resolveDataSpec() on every dataSpec/chunk
-     * resolution rather than once per song, so without this guard a heavily
-     * fragmented (e.g. long-cached) file can fan out dozens of redundant,
-     * concurrent recoverSong() coroutines — each doing a Room read, a hop to
-     * Dispatchers.Main, and a Room transaction — for work that's already done
-     * after the first one completes. Always call this instead of launching
-     * recoverSong() directly.
      */
     private fun recoverSongDeduped(
         mediaId: String,
-        playbackData: YTPlayerUtils.PlaybackData? = null,
+        playbackData: InnerTubeXPlayer.PlaybackData? = null,
     ) {
         if (!recoveringSongs.add(mediaId)) return
         scope.launch(Dispatchers.IO) {
@@ -3091,13 +3061,6 @@ class MusicService :
         } catch (e: Exception) {
             Timber.tag(TAG).e(e, "Failed to clear player cache for $mediaId")
         }
-
-        try {
-            YTPlayerUtils.forceRefreshForVideo(mediaId)
-            Timber.tag(TAG).d("Cleared decryption caches for $mediaId")
-        } catch (e: Exception) {
-            Timber.tag(TAG).e(e, "Failed to clear decryption caches for $mediaId")
-        }
     }
 
     /**
@@ -3292,24 +3255,16 @@ class MusicService :
         incrementRetryCount(mediaId)
 
         songUrlCache.invalidate(mediaId)
-        if (failedStreamClient == "WEB_REMIX") {
-            YTPlayerUtils.markWebRemixFailed(mediaId)
-        }
+        failedStreamClient?.let { InnerTubeXPlayer.markStreamClientFailed(mediaId, it) }
         Timber.tag(TAG).d("Cleared cached URL for $mediaId after $retryReason (client=$failedStreamClient)")
-
-        try {
-            YTPlayerUtils.forceRefreshForVideo(mediaId)
-        } catch (e: Exception) {
-            Timber.tag(TAG).e(e, "Failed to clear decryption caches")
-        }
 
         if (refreshCipherConfig) {
             // A rejection can mean the cipher produced a wrong-but-non-throwing signature. If a
-            // rate-limited refresh corrects the table, allow WEB_REMIX again on the next resolution.
+            // rate-limited refresh corrects the table, allow failed clients again on the next resolution.
             scope.launch {
-                if (CipherDeobfuscator.onStreamRejected()) {
-                    Timber.tag(TAG).d("Player config changed after stream rejection — restoring WEB_REMIX")
-                    YTPlayerUtils.clearWebRemixFailures()
+                if (InnerTubeXPlayer.refreshAfterStreamRejection()) {
+                    Timber.tag(TAG).d("Player config changed after stream rejection: restoring stream clients")
+                    InnerTubeXPlayer.clearStreamClientFailures()
                 }
             }
         }
@@ -3779,7 +3734,7 @@ class MusicService :
             val playbackData =
                 runBlocking(Dispatchers.IO) {
                     val song = database.songEntity(mediaId)
-                    YTPlayerUtils.playerResponseForPlayback(
+                    InnerTubeXPlayer.playerResponseForPlayback(
                         mediaId,
                         audioQuality = audioQuality,
                         connectivityManager = connectivityManager,
@@ -3997,14 +3952,8 @@ class MusicService :
             scope.launch(Dispatchers.IO) {
                 val playbackUrl =
                     playbackUrlCache[cacheKey(mediaItem.mediaId)]
-                        ?: YTPlayerUtils
-                            .playerResponseForMetadata(mediaItem.mediaId, null)
-                            .getOrNull()
-                            ?.playbackTracking
-                            ?.videostatsPlaybackUrl
-                            ?.baseUrl
                 if (playbackUrl == null) {
-                    Timber.tag(TAG).w("No playback tracking URL available for $mediaItem.mediaId, skipping YouTube history registration")
+                    Timber.tag(TAG).w("No playback tracking URL available; skipping YouTube history registration")
                     return@launch
                 }
                 YouTube
@@ -4665,7 +4614,7 @@ class MusicService :
             try {
                 val song = database.songEntity(mediaId)
                 val playbackData =
-                    YTPlayerUtils
+                    InnerTubeXPlayer
                         .playerResponseForPlayback(
                             videoId = mediaId,
                             audioQuality = audioQuality,

@@ -14,7 +14,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.joymusic.music.R
 import com.joymusic.music.constants.AudioQuality
-import com.joymusic.music.utils.YTPlayerUtils
+import com.joymusic.music.utils.InnerTubeXPlayer
 import com.joymusic.music.utils.dataStore
 import com.joymusic.music.utils.get
 import kotlinx.coroutines.CoroutineScope
@@ -108,7 +108,7 @@ class WrappedAudioService(
                 else AudioQuality.entries.find { it.name == value } ?: AudioQuality.AUTO
             }
             val playbackData = withContext(Dispatchers.IO) {
-                YTPlayerUtils.playerResponseForPlayback(
+                InnerTubeXPlayer.playerResponseForPlayback(
                     videoId = songId,
                     audioQuality = audioQuality,
                     connectivityManager = connectivityManager,

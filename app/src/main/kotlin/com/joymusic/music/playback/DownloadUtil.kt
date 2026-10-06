@@ -20,7 +20,7 @@ import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.DownloadManager
 import androidx.media3.exoplayer.offline.DownloadNotificationHelper
 import com.joymusic.innertube.YouTube
-import com.joymusic.innertube.strategy.ContentHints
+import com.metrolist.innertubex.extraction.ContentHints
 import com.joymusic.music.constants.AudioQuality
 import com.joymusic.music.constants.AudioQualityKey
 import com.joymusic.music.db.MusicDatabase
@@ -28,7 +28,7 @@ import com.joymusic.music.db.entities.FormatEntity
 import com.joymusic.music.db.entities.SongEntity
 import com.joymusic.music.di.DownloadCache
 import com.joymusic.music.di.PlayerCache
-import com.joymusic.music.utils.YTPlayerUtils
+import com.joymusic.music.utils.InnerTubeXPlayer
 import com.joymusic.music.utils.enumPreference
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -106,7 +106,7 @@ constructor(
 
             val playbackData = runBlocking(Dispatchers.IO) {
                 val song = database.songEntity(mediaId)
-                YTPlayerUtils.playerResponseForPlayback(
+                InnerTubeXPlayer.playerResponseForPlayback(
                     mediaId,
                     audioQuality = audioQuality,
                     connectivityManager = connectivityManager,
@@ -164,11 +164,6 @@ constructor(
                     ),
                 )
 
-                // Metadata registration only — dateDownload is intentionally NOT set here.
-                // It belongs solely to onDownloadChanged()'s STATE_COMPLETED branch below,
-                // which only fires once the download has actually finished. Setting it here
-                // (at URL-resolve time, i.e. the moment the download merely *starts*) would
-                // mark the song as "cached" before a single byte is written.
                 val existing = getSongByIdBlocking(mediaId)?.song
                 val updatedSong = existing ?: SongEntity(
                     id = mediaId,
@@ -182,7 +177,14 @@ constructor(
                 upsert(updatedSong)
             }
 
-            val streamUrl = playbackData.streamUrl
+            // googlevideo throttles unbounded requests to roughly playback speed; a range param covering
+            // the whole file lets the download run at full speed.
+            val streamUrl =
+                if (actualContentLength != null && "&range=" !in playbackData.streamUrl) {
+                    "${playbackData.streamUrl}&range=0-${actualContentLength - 1}"
+                } else {
+                    playbackData.streamUrl
+                }
 
             songUrlCache.put(
                 mediaId = mediaId,
