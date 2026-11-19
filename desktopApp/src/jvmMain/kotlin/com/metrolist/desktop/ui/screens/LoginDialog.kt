@@ -421,19 +421,21 @@ private fun WindowsHelperContent(
                 isRunning = true
                 status = WindowsLoginStatus.Launching
 
-                val helperExeName = "metro-wv2-helper.exe"
+                val helperNames = listOf("joy-wv2-helper.exe", "metro-wv2-helper.exe")
                 val resourcesDir = System.getProperty("compose.application.resources.dir")
                 val userDir = System.getProperty("user.dir")
-                val searchCandidates = listOfNotNull(
-                    resourcesDir?.let { File(it, "windows/$helperExeName") },
-                    resourcesDir?.let { File(it, helperExeName) },
-                    File("desktopApp/src/desktopMain/resources/windows/$helperExeName"),
-                    File("src/desktopMain/resources/windows/$helperExeName"),
-                    userDir?.let { File(it, "windows/$helperExeName") },
-                    userDir?.let { File(it, helperExeName) },
-                    userDir?.let { File(it, "app/resources/windows/$helperExeName") },
-                    userDir?.let { File(it, "app/resources/$helperExeName") },
-                )
+                val searchCandidates = helperNames.flatMap { helperExeName ->
+                    listOfNotNull(
+                        resourcesDir?.let { File(it, "windows/$helperExeName") },
+                        resourcesDir?.let { File(it, helperExeName) },
+                        File("desktopApp/src/desktopMain/resources/windows/$helperExeName"),
+                        File("src/desktopMain/resources/windows/$helperExeName"),
+                        userDir?.let { File(it, "windows/$helperExeName") },
+                        userDir?.let { File(it, helperExeName) },
+                        userDir?.let { File(it, "app/resources/windows/$helperExeName") },
+                        userDir?.let { File(it, "app/resources/$helperExeName") },
+                    )
+                }
                 val helperExe = searchCandidates.firstOrNull { it.isFile && it.exists() }
 
                 if (helperExe == null) {
