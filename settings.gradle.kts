@@ -50,7 +50,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Metrolist"
+rootProject.name = "JoyMusic"
 if (useLocalInnerTubeX) {
     includeBuild("../innertubex") {
         dependencySubstitution {
