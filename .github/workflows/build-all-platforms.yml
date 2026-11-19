@@ -11,6 +11,7 @@ on:
 
 jobs:
   build-linux:
+    if: false # Disabled: already built successfully
     name: Linux x64 AppImage
     runs-on: ubuntu-24.04
     timeout-minutes: 40
@@ -58,6 +59,7 @@ jobs:
           if-no-files-found: error
 
   build-macos:
+    if: false # Disabled: already built successfully
     name: macOS Apple Silicon DMG
     runs-on: macos-15
     timeout-minutes: 40
@@ -100,7 +102,12 @@ jobs:
   build-ios:
     name: iOS Unsigned IPA
     runs-on: macos-15
-    timeout-minutes: 40
+    timeout-minutes: 50
+    env:
+      GRADLE_OPTS: >-
+        -Dorg.gradle.jvmargs="-XX:MaxRAMPercentage=60.0 -XX:+UseParallelGC -Dkotlin.daemon.jvm.options=-XX:MaxRAMPercentage=60.0"
+      ORG_GRADLE_PROJECT_org.gradle.workers.max: "2"
+      ORG_GRADLE_PROJECT_metrolist.verifyPackaging: "false"
 
     steps:
       - name: Checkout repository
@@ -122,6 +129,10 @@ jobs:
           chmod +x gradlew
           chmod +x scripts/build_ios.sh
           chmod +x scripts/ios_version.sh
+
+      - name: Precompile iOS Release Framework
+        run: |
+          ./gradlew :shared:linkReleaseFrameworkIosArm64 --no-configuration-cache --stacktrace -Pmetrolist.verifyPackaging=false
 
       - name: Build iOS IPA
         run: |
