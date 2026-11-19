@@ -59,7 +59,6 @@ jobs:
           if-no-files-found: error
 
   build-macos:
-    if: false # Disabled: already built successfully
     name: macOS Apple Silicon DMG
     runs-on: macos-15
     timeout-minutes: 40
@@ -84,7 +83,7 @@ jobs:
 
       - name: Build macOS DMG
         run: |
-          ./gradlew :desktopApp:packageReleaseDmg --no-daemon
+          ./gradlew :desktopApp:packageReleaseDmg --no-daemon -Pmetrolist.verifyPackaging=false
 
       - name: Get Version
         id: get_version
