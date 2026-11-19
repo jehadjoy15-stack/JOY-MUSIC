@@ -28,12 +28,8 @@ dependencies {
     api(libs.protobuf.javalite)
 }
 
-sourceSets {
-    named("main") {
-        proto {
-            srcDir("src/main/proto")
-        }
-    }
+tasks.withType<ProcessResources>().configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 protobuf {
