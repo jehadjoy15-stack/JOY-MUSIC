@@ -99,6 +99,7 @@ jobs:
           if-no-files-found: error
 
   build-ios:
+    needs: build-macos
     name: iOS Unsigned IPA
     runs-on: macos-15
     timeout-minutes: 90
