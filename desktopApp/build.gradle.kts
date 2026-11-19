@@ -366,6 +366,7 @@ val generateSidecarChecksums =
                 Triple("linux/bgutil-ytdlp-pot-provider-rs", "linux", "bgutil-ytdlp-pot-provider-rs.sha256"),
                 Triple("macos/bgutil-ytdlp-pot-provider-rs", "macos", "bgutil-ytdlp-pot-provider-rs.sha256"),
                 Triple("windows/bgutil-ytdlp-pot-provider-rs.exe", "windows", "bgutil-ytdlp-pot-provider-rs.exe.sha256"),
+                Triple("windows/joy-wv2-helper.exe", "windows", "joy-wv2-helper.exe.sha256"),
                 Triple("windows/metro-wv2-helper.exe", "windows", "metro-wv2-helper.exe.sha256"),
             )
         val resourcesDirectory = layout.projectDirectory.dir("src/desktopMain/resources")

@@ -8,4 +8,4 @@ Only the latest release receives security fixes.
 
 Do not report security vulnerabilities in public issues.
 
-Email security@metrolist.cc with a description of the issue, the affected version and steps to reproduce it. We will acknowledge your report and update you as we work on a fix.
+Email contact@jehadjoy.dev with a description of the issue, the affected version and steps to reproduce it. We will acknowledge your report and update you as we work on a fix.
