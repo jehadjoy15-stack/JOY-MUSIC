@@ -229,8 +229,8 @@ export JOYMUSIC_CURSOR_CONFIGURED=1
 
 # Keep archives outside read-only installations, including AppImage mounts and Flatpak's /app.
 case "$XDG_CACHE_HOME" in
-    /*) JOYMUSIC_CDS_CACHE="$XDG_CACHE_HOME/metrolist" ;;
-    *) JOYMUSIC_CDS_CACHE="$HOME/.cache/metrolist" ;;
+    /*) JOYMUSIC_CDS_CACHE="$XDG_CACHE_HOME/joymusic" ;;
+    *) JOYMUSIC_CDS_CACHE="$HOME/.cache/joymusic" ;;
 esac
 export JOYMUSIC_CDS_CACHE
 
