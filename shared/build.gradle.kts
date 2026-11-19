@@ -417,7 +417,10 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
-            freeCompilerArgs += "-Xadd-light-debug=enable"
+            freeCompilerArgs += listOf(
+                "-Xadd-light-debug=enable",
+                "-Xbinary=bundleId=com.joymusic.shared",
+            )
         }
     }
 
