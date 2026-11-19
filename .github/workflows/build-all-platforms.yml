@@ -138,9 +138,9 @@ jobs:
           chmod +x scripts/build_ios.sh
           chmod +x scripts/ios_version.sh
 
-      - name: Precompile iOS Release Framework
+      - name: Precompile iOS Framework
         run: |
-          ./gradlew :shared:linkReleaseFrameworkIosArm64 --no-configuration-cache --stacktrace -Pmetrolist.verifyPackaging=false
+          ./gradlew :shared:linkDebugFrameworkIosArm64 --no-configuration-cache --stacktrace -Pmetrolist.verifyPackaging=false
 
       - name: Build iOS IPA
         run: |

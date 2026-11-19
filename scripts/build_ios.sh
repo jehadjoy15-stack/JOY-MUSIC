@@ -17,7 +17,12 @@ run_after_build=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --ipa|--release)
+    --ipa)
+      mode="ipa"
+      configuration="${IOS_BUILD_CONFIGURATION:-Debug}"
+      shift
+      ;;
+    --release)
       mode="ipa"
       configuration="Release"
       shift
