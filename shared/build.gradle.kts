@@ -418,7 +418,6 @@ kotlin {
             baseName = "Shared"
             isStatic = true
             freeCompilerArgs += listOf(
-                "-Xadd-light-debug=enable",
                 "-Xbinary=bundleId=com.joymusic.shared",
             )
         }
