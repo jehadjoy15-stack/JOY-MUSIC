@@ -9,7 +9,7 @@ build_dir="$root_dir/iosApp/build"
 derived_data_dir="$root_dir/iosApp/DerivedData"
 scheme="iosApp"
 project_path="$root_dir/iosApp/iosApp.xcodeproj"
-bundle_id="com.metrolist.MetrolistApp"
+bundle_id="com.joymusic.ios"
 
 mode="sim"
 configuration="Debug"
@@ -104,13 +104,13 @@ if [[ "$mode" == "ipa" ]]; then
 
   echo "Step 2: Creating unsigned IPA package in dist/..."
   payload_dir="$build_dir/Payload"
-  rm -rf "$payload_dir" "$dist_dir/Metrolist.ipa"
+  rm -rf "$payload_dir" "$dist_dir/JoyMusic.ipa"
   mkdir -p "$payload_dir"
   cp -R "$app_bundle" "$payload_dir/"
   
-  (cd "$build_dir" && zip -qr "$dist_dir/Metrolist.ipa" Payload)
-  unzip -tq "$dist_dir/Metrolist.ipa"
-  echo "IPA package created: $dist_dir/Metrolist.ipa"
+  (cd "$build_dir" && zip -qr "$dist_dir/JoyMusic.ipa" Payload)
+  unzip -tq "$dist_dir/JoyMusic.ipa"
+  echo "IPA package created: $dist_dir/JoyMusic.ipa"
   echo "You can install this IPA using AltStore, SideStore, TrollStore, or Sideloadly."
 
 elif [[ "$mode" == "sim" ]]; then
