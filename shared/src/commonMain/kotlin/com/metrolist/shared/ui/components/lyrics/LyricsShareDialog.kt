@@ -116,7 +116,6 @@ fun LyricsShareDialog(
     exportLabel: String,
     onExport: suspend (ImageBitmap) -> Boolean,
     onShareText: (String) -> Unit,
-    onSaveVideo: (() -> Unit)? = null,
     onDismiss: () -> Unit,
 ) {
     var busy by remember { mutableStateOf(false) }
@@ -357,16 +356,6 @@ fun LyricsShareDialog(
                         },
                         shapes = ButtonDefaults.shapes(),
                     ) { Text(stringResource(Res.string.share_as_text)) }
-                    if (onSaveVideo != null) {
-                        Button(
-                            enabled = !busy,
-                            onClick = {
-                                onSaveVideo()
-                                onDismiss()
-                            },
-                            shapes = ButtonDefaults.shapes(),
-                        ) { Text("Save as Video") }
-                    }
                     Button(
                         enabled = bitmap != null && !busy,
                         onClick = {

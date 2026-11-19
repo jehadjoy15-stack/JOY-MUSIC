@@ -39,7 +39,7 @@ object Updater {
     private var cachedAllReleases: List<ReleaseInfo> = emptyList()
     
     private const val CHECK_INTERVAL_MILLIS = 2 * 60 * 60 * 1000L // 2 hours
-    private const val GITHUB_API_BASE = "https://api.github.com/repos/jehadjoy15-stack/JOY-MUSIC"
+    private const val GITHUB_API_BASE = "https://api.github.com/repos/jehadjoy10-cmyk/joymusic"
     private const val KMP_RELEASES_URL = "https://api.github.com/repos/jehadjoy15-stack/apk-joy-music-KMP/releases?per_page=30"
     const val KMP_APK_NAME = "JOY MUSIC.apk"
 

@@ -211,27 +211,8 @@ fun SongContextMenu(
 ) {
     var showDetails by remember(song.id) { mutableStateOf(false) }
     var showEditDialog by remember(song.id) { mutableStateOf(false) }
-    var showClipDialog by remember(song.id) { mutableStateOf(false) }
-    if (showClipDialog) {
-        ClipSaveDialog(
-            song = song,
-            onDismiss = {
-                showClipDialog = false
-                onDismiss()
-            },
-        )
-    }
     val deleteUploadAction =
         if (expanded) rememberDeleteUploadAction(song, remember { GlobalContext.get().get<MusicDatabase>() }, onDismiss) else null
-    val clipAction = remember(song) {
-        PlayerMenuAction(
-            MetrolistIcons.AutoMirrored.Outlined.VolumeUp,
-            "Clip & Save Audio / Video",
-            "Save trimmed audio (.mp3) or video (.mp4) to any folder",
-        ) {
-            showClipDialog = true
-        }
-    }
     if (showEditDialog) {
         SongMetadataEditorDialog(
             song = song,
@@ -312,7 +293,7 @@ fun SongContextMenu(
                         }
                     }
                 },
-            additionalActions = listOf(clipAction) + additionalActions,
+            additionalActions = additionalActions,
         )
     }
 }

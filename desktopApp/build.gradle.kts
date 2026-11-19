@@ -807,12 +807,12 @@ compose.desktop {
                 jvmArgs += listOf("-Djava.locale.providers=CLDR,SPI", "-Dwebkit.disable.dmabuf.renderer=1")
             }
             macOS {
-                bundleID = "com.metrolist.desktop"
+                bundleID = "com.joymusic.desktop"
                 infoPlist {
                     extraKeysRawXml =
                         """
                         <key>NSLocalNetworkUsageDescription</key>
-                        <string>Metrolist uses the local network to find and control casting devices.</string>
+                        <string>JoyMusic uses the local network to find and control casting devices.</string>
                         <key>NSBonjourServices</key>
                         <array>
                             <string>_fcast._tcp</string>
@@ -822,9 +822,11 @@ compose.desktop {
                         <array>
                             <dict>
                                 <key>CFBundleURLName</key>
-                                <string>Metrolist URL</string>
+                                <string>JoyMusic URL</string>
                                 <key>CFBundleURLSchemes</key>
                                 <array>
+                                    <string>joymusic</string>
+                                    <string>joymusic-auth</string>
                                     <string>metrolist</string>
                                     <string>metrolist-auth</string>
                                 </array>
@@ -834,7 +836,7 @@ compose.desktop {
                 }
                 iconFile.set(project.file("src/desktopMain/resources/logo.icns"))
                 dmgPackageVersion = packageVersion
-                dockName = "Metrolist"
+                dockName = "JoyMusic"
             }
         }
     }
@@ -843,8 +845,8 @@ compose.desktop {
 val cdsCache =
     when (platform) {
         "win" -> "\$LOCALAPPDATA/JoyMusic/cache"
-        "mac" -> "\$HOME/Library/Caches/com.metrolist.desktop"
-        else -> "\$METROLIST_CDS_CACHE"
+        "mac" -> "\$HOME/Library/Caches/com.joymusic.desktop"
+        else -> "\$JOYMUSIC_CDS_CACHE"
     }
 // Compose assigns launcherJvmArgs while registering its tasks after project evaluation.
 afterEvaluate {

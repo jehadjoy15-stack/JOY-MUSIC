@@ -278,13 +278,6 @@ internal fun DesktopLyricsContent(
     val saveTitle = stringResource(Res.string.lyrics_share_save_image)
     val filename = stringResource(Res.string.lyrics_share_filename)
     val track = PlayerState.currentTrack
-    var showClipDialog by remember { mutableStateOf(false) }
-    if (showClipDialog && track != null) {
-        ClipSaveDialog(
-            song = track,
-            onDismiss = { showClipDialog = false },
-        )
-    }
     selectedText?.let { text ->
         if (track != null) {
             LyricsShareDialog(
@@ -296,10 +289,6 @@ internal fun DesktopLyricsContent(
                 exportLabel = saveTitle,
                 onExport = { saveImage(it, saveTitle, filename) },
                 onShareText = AppState::copyToClipboard,
-                onSaveVideo = {
-                    showClipDialog = true
-                    selectedText = null
-                },
                 onDismiss = { selectedText = null },
             )
         }

@@ -5,7 +5,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>Metrolist</string>
+    <string>JoyMusic</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -27,6 +27,8 @@
             <string>Editor</string>
             <key>CFBundleURLSchemes</key>
             <array>
+                <string>joymusic-auth</string>
+                <string>joymusic</string>
                 <string>metrolist-auth</string>
                 <string>metrolist</string>
             </array>

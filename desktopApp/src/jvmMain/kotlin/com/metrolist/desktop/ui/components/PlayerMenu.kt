@@ -481,13 +481,6 @@ fun PlayerMenuPanel(
     val currentTrack = PlayerState.currentTrack
     val playback = LocalPlaybackController.current
     var editingSong by remember { mutableStateOf<SongItem?>(null) }
-    var showClipDialog by remember { mutableStateOf(false) }
-    if (showClipDialog && currentTrack != null) {
-        ClipSaveDialog(
-            song = currentTrack,
-            onDismiss = { showClipDialog = false },
-        )
-    }
     editingSong?.let { song ->
         SongMetadataEditorDialog(
             song = song,
@@ -616,15 +609,6 @@ fun PlayerMenuPanel(
                         ) {
                             action()
                             onDismiss()
-                        }
-                    },
-                    currentTrack?.let {
-                        PlayerMenuAction(
-                            MetrolistIcons.AutoMirrored.Outlined.VolumeUp,
-                            "Clip & Save Audio / Video",
-                            "Save trimmed audio (.mp3) or video (.mp4) to any folder",
-                        ) {
-                            showClipDialog = true
                         }
                     },
                     (onShowSleepTimerDialog != null || sleepActive).takeIf { it && !isListenTogetherGuest }?.let {
