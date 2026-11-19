@@ -423,17 +423,20 @@ private fun WindowsHelperContent(
 
                 val helperExeName = "metro-wv2-helper.exe"
                 val resourcesDir = System.getProperty("compose.application.resources.dir")
-                val helperExe =
-                    if (resourcesDir != null) {
-                        val dir = File(resourcesDir)
-                        File(dir, "windows/$helperExeName").takeIf { it.exists() }
-                            ?: File(dir, helperExeName)
-                    } else {
-                        File("desktopApp/src/desktopMain/resources/windows/$helperExeName").takeIf { it.exists() }
-                            ?: File("src/desktopMain/resources/windows/$helperExeName")
-                    }
+                val userDir = System.getProperty("user.dir")
+                val searchCandidates = listOfNotNull(
+                    resourcesDir?.let { File(it, "windows/$helperExeName") },
+                    resourcesDir?.let { File(it, helperExeName) },
+                    File("desktopApp/src/desktopMain/resources/windows/$helperExeName"),
+                    File("src/desktopMain/resources/windows/$helperExeName"),
+                    userDir?.let { File(it, "windows/$helperExeName") },
+                    userDir?.let { File(it, helperExeName) },
+                    userDir?.let { File(it, "app/resources/windows/$helperExeName") },
+                    userDir?.let { File(it, "app/resources/$helperExeName") },
+                )
+                val helperExe = searchCandidates.firstOrNull { it.isFile && it.exists() }
 
-                if (!helperExe.exists()) {
+                if (helperExe == null) {
                     status = WindowsLoginStatus.HelperNotFound
                     isRunning = false
                     return@launch

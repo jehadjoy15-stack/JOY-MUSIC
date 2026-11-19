@@ -237,7 +237,10 @@ private class VerifyReleaseDistributableAction(
         check(listOf(baseArchive, windowsBaseArchive).any { it.isFile && it.length() > 0 }) {
             "Release distributable must contain a base CDS archive"
         }
-        val launcherConfig = root.walkTopDown().single { it.extension == "cfg" }.readText()
+        val launcherConfigFile = root.walkTopDown().firstOrNull { it.name.equals("JoyMusic.cfg", ignoreCase = true) }
+            ?: root.walkTopDown().firstOrNull { it.extension == "cfg" && it.name != "jvm.cfg" }
+            ?: throw GradleException("Launcher config JoyMusic.cfg not found in ${root.absolutePath}")
+        val launcherConfig = launcherConfigFile.readText()
         listOf(
             "-Xshare:auto",
             "-XX:+VerifySharedSpaces",
