@@ -11,9 +11,8 @@ on:
 
 jobs:
   build-linux:
-    if: false # Disabled: already built successfully
     name: Linux x64 AppImage
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 40
 
     steps:
@@ -60,7 +59,7 @@ jobs:
 
   build-macos:
     name: macOS Apple Silicon DMG
-    runs-on: macos-15
+    runs-on: macos-14
     timeout-minutes: 40
 
     steps:
@@ -99,9 +98,8 @@ jobs:
           if-no-files-found: error
 
   build-ios:
-    needs: build-macos
     name: iOS Unsigned IPA
-    runs-on: macos-15
+    runs-on: macos-14
     timeout-minutes: 90
     env:
       GRADLE_OPTS: >-
