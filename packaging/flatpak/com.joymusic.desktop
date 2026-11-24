@@ -1,0 +1,3 @@
+#!/bin/sh
+export APPDIR=/app/joymusic
+exec "$APPDIR/AppRun" "$@"

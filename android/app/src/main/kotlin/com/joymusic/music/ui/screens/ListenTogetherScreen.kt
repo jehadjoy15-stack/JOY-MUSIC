@@ -130,8 +130,15 @@ fun ListenTogetherScreen(
     val shouldShowTopBar = showTopBar || listenTogetherInTopBar
 
     var savedUsername by rememberPreference(ListenTogetherUsernameKey, "")
-    var roomCodeInput by rememberSaveable { mutableStateOf("") }
+    val savedRoomCode by rememberPreference(com.joymusic.music.constants.ListenTogetherRoomCodeKey, "")
+    var roomCodeInput by rememberSaveable { mutableStateOf(savedRoomCode) }
     var usernameInput by rememberSaveable { mutableStateOf(savedUsername) }
+
+    LaunchedEffect(savedRoomCode) {
+        if (savedRoomCode.isNotBlank()) {
+            roomCodeInput = savedRoomCode
+        }
+    }
 
     var isCreatingRoom by rememberSaveable { mutableStateOf(false) }
     var isJoiningRoom by rememberSaveable { mutableStateOf(false) }

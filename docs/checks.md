@@ -287,11 +287,11 @@ Repository checks always validate translations. Flatpak validation runs for chan
 
 Preserve these rules when changing workflows:
 
-- Verification builds use `-Pmetrolist.sourceRevision=` to avoid invalidating Kotlin compilation on every commit. Published packages keep the real revision. On iOS, clear it only for backend tests, not the Xcode archive.
+- Verification builds use `-Pjoymusic.sourceRevision=` to avoid invalidating Kotlin compilation on every commit. Published packages keep the real revision. On iOS, clear it only for backend tests, not the Xcode archive.
 - Give each distinct task graph its own `prepare-ci-gradle` cache scope. Android debug and release, and iOS tests and packaging, must not overwrite each other's caches.
 - Do not persist the configuration cache for builds that read credentials during configuration, including Android debug and iOS jobs. Release Android and desktop packaging use `--no-configuration-cache` to avoid serializing secrets into a cache entry.
 - Pull requests may restore caches but must not save them. Keep native cache keys specific to runner architecture, OS and toolchain. iOS caches `~/.konan` separately for tests and packaging, with a dependency fingerprint so changed dependencies can save an updated cache. Fallback restores must keep the full OS, architecture, Kotlin, Xcode and task-graph prefix. Releases reuse verified tests through the gate; manual IPA builds run tests and packaging. Windows caches NuGet packages by SDK and project dependencies. Rust toolchain caches include the pinned version, OS and architecture. Linux WebView compilation keys include the actual distribution and native library versions.
-- Runtime task caching fingerprints the full packaging JDK, OS, host architecture, module options and CDS JVM flags. Do not cache a jlink output using only a Java major version. Manual packaging runs the integrity checks after restoration. Gated releases set `metrolist.verifyPackaging=false`; Linux verification still checks shared JAR integrity and both dictionary packages.
+- Runtime task caching fingerprints the full packaging JDK, OS, host architecture, module options and CDS JVM flags. Do not cache a jlink output using only a Java major version. Manual packaging runs the integrity checks after restoration. Gated releases set `joymusic.verifyPackaging=false`; Linux verification still checks shared JAR integrity and both dictionary packages.
 - Release Android skips `lintVitalRelease` with `-x` because debug verification already runs lint. Do not replace this with `checkReleaseBuilds = false`, which unregisters the task.
 - Measure cache changes on hosted runners with cold and repeated warm runs. Local timings do not establish CI speedups.
 

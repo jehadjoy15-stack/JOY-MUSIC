@@ -64,9 +64,9 @@ jobs:
       - name: Build Release APK
         run: ./gradlew --console=plain assemble${{ matrix.variantName }}Release --warning-mode summary
         env:
-          METROLIST_APPLICATION_ID: com.metrolist.music
-          METROLIST_APP_NAME: Metrolist Nightly
-          METROLIST_BUILD_COMMIT: ${{ github.sha }}
+          JOYMUSIC_APPLICATION_ID: com.joymusic.music
+          JOYMUSIC_APP_NAME: JoyMusic Nightly
+          JOYMUSIC_BUILD_COMMIT: ${{ github.sha }}
           PULL_REQUEST: "false"
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
@@ -145,9 +145,9 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew --console=plain assemble${{ matrix.variantName }}Debug --warning-mode summary
         env:
-          METROLIST_APPLICATION_ID: com.metrolist.music
-          METROLIST_APP_NAME: Metrolist Nightly
-          METROLIST_BUILD_COMMIT: ${{ github.sha }}
+          JOYMUSIC_APPLICATION_ID: com.joymusic.music
+          JOYMUSIC_APP_NAME: JoyMusic Nightly
+          JOYMUSIC_BUILD_COMMIT: ${{ github.sha }}
           PULL_REQUEST: "false"
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}

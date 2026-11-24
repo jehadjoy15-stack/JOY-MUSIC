@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
 
 const source = readFileSync(new URL(
-    "../shared/src/commonMain/kotlin/com/metrolist/shared/youtube/playback/PageBoundPoTokenMinter.kt",
+    "../shared/src/commonMain/kotlin/com/joymusic/shared/youtube/playback/PageBoundPoTokenMinter.kt",
     import.meta.url,
 ), "utf8");
 const generate = source.slice(source.indexOf("suspend fun generate("));
@@ -28,12 +28,12 @@ for (const outcome of ["success", "error"]) {
             if (outcome === "success") pending[0].resolve([1, 2, 3]);
             else pending[0].reject(new Error("cancelled request failed"));
             await setImmediate();
-            assert.equal(runtime.__metrolistPoToken.state, finishNewFirst ? "ready" : "running");
+            assert.equal(runtime.__joymusicPoToken.state, finishNewFirst ? "ready" : "running");
 
             pending[1].resolve([4, 5, 6]);
             await setImmediate();
-            assert.equal(runtime.__metrolistPoToken.state, "ready");
-            assert.equal(runtime.__metrolistPoToken.value, "4,5,6");
+            assert.equal(runtime.__joymusicPoToken.state, "ready");
+            assert.equal(runtime.__joymusicPoToken.value, "4,5,6");
         });
     }
 }

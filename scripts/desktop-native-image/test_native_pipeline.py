@@ -94,14 +94,14 @@ class PipelineTest(unittest.TestCase):
     def test_windows_archive_requires_matching_helper_and_architecture(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory); image=root/'image'; image.mkdir()
-            executable(image/'Metrolist.exe')
+            executable(image/'JoyMusic.exe')
             helper=image/'resources/windows/metro-wv2-helper.exe';executable(helper)
             checksum=helper.with_suffix('.exe.sha256'); checksum.write_text(hashlib.sha256(helper.read_bytes()).hexdigest())
             result=package.package(image,'windows-x64',root/'dist','14.0.0-test')
             with zipfile.ZipFile(result) as archive:
-                self.assertIn('Metrolist.exe',archive.namelist())
+                self.assertIn('JoyMusic.exe',archive.namelist())
                 manifest=json.loads(archive.read('install-manifest.json'))
-                self.assertEqual(manifest['launcher'],'Metrolist.exe')
+                self.assertEqual(manifest['launcher'],'JoyMusic.exe')
                 self.assertEqual(manifest['architecture'],'x86_64')
             executable(image/'foreign.dll',0xAA64)
             with self.assertRaisesRegex(ValueError,'x64'):
@@ -112,15 +112,15 @@ class PipelineTest(unittest.TestCase):
 
     def test_linux_appimage_does_not_replace_jvm_package(self):
         with tempfile.TemporaryDirectory() as directory:
-            root=Path(directory);image=root/'image';image.mkdir();(image/'Metrolist').write_text('binary')
-            previous=root/'dist/Metrolist.AppImage';previous.parent.mkdir();previous.write_text('JVM package')
+            root=Path(directory);image=root/'image';image.mkdir();(image/'JoyMusic').write_text('binary')
+            previous=root/'dist/JoyMusic.AppImage';previous.parent.mkdir();previous.write_text('JVM package')
             def pack(command,**_):
                 Path(command[-1]).write_text('native package')
             with patch('subprocess.run',side_effect=pack):
                 result=package.package(image,'linux-x64',root/'dist','14.0.0-test')
             self.assertEqual(previous.read_text(),'JVM package')
             self.assertNotEqual(result,previous)
-            app=root/'dist/metrolist-desktop-native-linux-x64-14.0.0-test.AppDir'
+            app=root/'dist/joymusic-desktop-native-linux-x64-14.0.0-test.AppDir'
             self.assertTrue(os.access(app/'AppRun',os.X_OK))
             self.assertTrue((app/'resources').is_symlink())
 

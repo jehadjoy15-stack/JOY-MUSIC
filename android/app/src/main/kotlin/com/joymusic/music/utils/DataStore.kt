@@ -72,6 +72,12 @@ operator fun <T> DataStore<Preferences>.get(key: Preferences.Key<T>): T? =
         data.first()[key]
     }
 
+operator fun <T> DataStore<Preferences>.set(key: Preferences.Key<T>, value: T) {
+    runBlocking(Dispatchers.IO) {
+        edit { it[key] = value }
+    }
+}
+
 fun <T> DataStore<Preferences>.get(
     key: Preferences.Key<T>,
     defaultValue: T,

@@ -242,7 +242,7 @@
     <string name="credits_license_desc">JOY MUSIC 依據 GPL-3.0 授權。</string>
     <string name="devmode_already_active" translatable="true">開發模式已啟用</string>
     <string name="discord_enable_rich_presence">啟用 Discord Rich Presence</string>
-    <string name="discord_listen_to_metrolist">用 JOY MUSIC 收聽</string>
+    <string name="discord_listen_to_joymusic">用 JOY MUSIC 收聽</string>
     <string name="discord_login_description">連結您的 Discord 帳戶</string>
     <string name="discord_rich_presence">Rich Presence</string>
     <string name="discord_state">狀態</string>
@@ -252,7 +252,7 @@
     <string name="discord_status_not_initialized">未啟動</string>
     <string name="discord_status_authorized">已授權</string>
     <string name="discord_error_denied">Discord拒絕授權。</string>
-    <string name="discord_error_connection_failed">無法連結Discord。Metrolist即將自動重試。</string>
+    <string name="discord_error_connection_failed">無法連結Discord。JoyMusic即將自動重試。</string>
     <string name="discord_error_no_browser">沒有可用應用程式來開啟 Discord 授權。</string>
     <string name="discord_error_token_exchange_failed">Token 交換失敗。請再試一次。</string>
     <string name="discord_error_token_refresh_failed">Token 更新失敗。請重新登入。</string>

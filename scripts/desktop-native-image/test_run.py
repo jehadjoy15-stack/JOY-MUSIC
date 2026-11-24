@@ -23,7 +23,7 @@ class ExperimentTest(unittest.TestCase):
             self.assertTrue(Path(env["TMPDIR"]).is_relative_to(profile))
             for kind in ("CONFIG", "DATA", "CACHE", "STATE"):
                 self.assertTrue(Path(env[f"XDG_{kind}_HOME"]).is_relative_to(profile))
-            config = profile / "config/metrolist/settings.properties"
+            config = profile / "config/joymusic/settings.properties"
             self.assertIn("sentryEnabled=false", config.read_text())
             config.write_text("saved=true\n")
             run.environment(profile)
@@ -52,7 +52,7 @@ class ExperimentTest(unittest.TestCase):
             work = Path(directory)
             args = argparse.Namespace(work=work, mode="native", registration_mode="Exit", media=None)
             command = run.command(args, work / "profile")
-            self.assertEqual(command[0], str(work / "image/metrolist"))
+            self.assertEqual(command[0], str(work / "image/joymusic"))
             self.assertIn(f"-Djava.home={work / 'image'}", command)
             self.assertIn("-XX:MissingRegistrationReportingMode=Exit", command)
             self.assertIn("-Xms32m", command)
@@ -63,13 +63,13 @@ class ExperimentTest(unittest.TestCase):
             work = Path(directory)
             jar = work / "app.jar"
             jar.touch()
-            config = work / "Metrolist.cfg"
+            config = work / "JoyMusic.cfg"
             config.write_text("app.classpath=$APPDIR/app.jar\njava-options=-Xmx384m\n"
-                              "java-options=-XX:SharedArchiveFile=$METROLIST_CDS_CACHE/app.jsa\n"
-                              "java-options=-XX:ErrorFile=$METROLIST_JVM_ERROR_FILE\n")
+                              "java-options=-XX:SharedArchiveFile=$JOYMUSIC_CDS_CACHE/app.jsa\n"
+                              "java-options=-XX:ErrorFile=$JOYMUSIC_JVM_ERROR_FILE\n")
             options, classpath = run.release_options(config, work / "profile")
             self.assertEqual(classpath, str(jar))
-            self.assertIn(f"-XX:SharedArchiveFile={work / 'profile/cache/metrolist/app.jsa'}", options)
+            self.assertIn(f"-XX:SharedArchiveFile={work / 'profile/cache/joymusic/app.jsa'}", options)
             self.assertTrue(all("$" not in option for option in options))
             config.write_text("app.classpath=$APPDIR/*\n")
             self.assertEqual(run.release_options(config, work / "profile")[1], str(work / "*"))
@@ -77,7 +77,7 @@ class ExperimentTest(unittest.TestCase):
     def test_release_options_reject_unknown_environment_variables(self):
         with tempfile.TemporaryDirectory() as directory:
             work = Path(directory)
-            config = work / "Metrolist.cfg"
+            config = work / "JoyMusic.cfg"
             config.write_text("app.classpath=$HOME/private.jar\n")
             with self.assertRaisesRegex(ValueError, "Unrecognized package variable"):
                 run.release_options(config, work / "profile")

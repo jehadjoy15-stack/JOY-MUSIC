@@ -25,8 +25,8 @@ def archive(directory, destination):
 
 
 def validate_windows(image):
-    if not (image / 'Metrolist.exe').is_file():
-        raise ValueError('Windows native image has no Metrolist.exe launcher')
+    if not (image / 'JoyMusic.exe').is_file():
+        raise ValueError('Windows native image has no JoyMusic.exe launcher')
     for path in image.rglob('*'):
         if path.suffix.lower() not in ('.exe', '.dll'):
             continue
@@ -41,7 +41,7 @@ def validate_windows(image):
 
 
 def package(image, target, destination, version):
-    name = f'metrolist-desktop-native-{target}-{version}'
+    name = f'joymusic-desktop-native-{target}-{version}'
     destination.mkdir(parents=True, exist_ok=True)
     if target.startswith('linux-'):
         app = destination / (name + '.AppDir')
@@ -50,12 +50,12 @@ def package(image, target, destination, version):
         (app / 'lib').mkdir(parents=True)
         shutil.copytree(image, app / 'lib/native')
         (app / 'bin').mkdir()
-        shutil.copy2(Path(__file__).with_name('linux-launcher.sh'), app / 'bin/Metrolist')
-        (app / 'bin/Metrolist').chmod(0o755)
-        (app / 'AppRun').write_text('#!/bin/sh\nexec "$(dirname "$(readlink -f "$0")")/bin/Metrolist" "$@"\n')
+        shutil.copy2(Path(__file__).with_name('linux-launcher.sh'), app / 'bin/JoyMusic')
+        (app / 'bin/JoyMusic').chmod(0o755)
+        (app / 'AppRun').write_text('#!/bin/sh\nexec "$(dirname "$(readlink -f "$0")")/bin/JoyMusic" "$@"\n')
         (app / 'AppRun').chmod(0o755)
-        (app / 'Metrolist.desktop').write_text('[Desktop Entry]\nType=Application\nName=Metrolist\nExec=bin/Metrolist %u\nIcon=Metrolist\nStartupWMClass=Metrolist\nComment=Metrolist music client\nCategories=AudioVideo;Player;\nTerminal=false\nMimeType=x-scheme-handler/metrolist;x-scheme-handler/metrolist-auth;\n')
-        shutil.copy2(ROOT / 'desktopApp/src/desktopMain/resources/logo.png', app / 'Metrolist.png')
+        (app / 'JoyMusic.desktop').write_text('[Desktop Entry]\nType=Application\nName=JoyMusic\nExec=bin/JoyMusic %u\nIcon=JoyMusic\nStartupWMClass=JoyMusic\nComment=JoyMusic music client\nCategories=AudioVideo;Player;\nTerminal=false\nMimeType=x-scheme-handler/joymusic;x-scheme-handler/joymusic-auth;\n')
+        shutil.copy2(ROOT / 'desktopApp/src/desktopMain/resources/logo.png', app / 'JoyMusic.png')
         (app / 'resources').symlink_to('lib/native/resources', target_is_directory=True)
         output = destination / (name + '.AppImage')
         subprocess.run(['bash', str(ROOT / 'scripts/build_appimage.sh'), '--native-appdir', str(app.resolve()), str(output.resolve())], check=True)
@@ -69,19 +69,19 @@ def package(image, target, destination, version):
             digest = hashlib.file_digest(stream, 'sha256').hexdigest()
         if digest != checksum.read_text().strip():
             raise ValueError('Windows login helper checksum mismatch')
-        (image / 'install-manifest.json').write_text(json.dumps({'schema':1,'appId':'com.metrolist.desktop','version':version,'platform':'windows','architecture':'x86_64','launcher':'Metrolist.exe'},indent=2)+'\n')
+        (image / 'install-manifest.json').write_text(json.dumps({'schema':1,'appId':'com.joymusic.desktop','version':version,'platform':'windows','architecture':'x86_64','launcher':'JoyMusic.exe'},indent=2)+'\n')
         output = destination / (name + '.zip')
         archive(image, output)
     elif target == 'macos-arm64':
         root = destination / name
-        app = root / 'Metrolist.app/Contents'
+        app = root / 'JoyMusic.app/Contents'
         if root.exists():
             shutil.rmtree(root)
         shutil.copytree(image, app / 'MacOS', ignore=shutil.ignore_patterns('resources'))
         shutil.copytree(image / 'resources', app / 'Resources')
         shutil.copy2(ROOT / 'desktopApp/src/desktopMain/resources/logo.icns', app / 'Resources/logo.icns')
         with (app / 'Info.plist').open('wb') as stream:
-            plistlib.dump({'CFBundleExecutable':'Metrolist','CFBundleIdentifier':'com.metrolist.desktop','CFBundleName':'Metrolist','CFBundlePackageType':'APPL','CFBundleShortVersionString':version.split('-')[0],'CFBundleVersion':version.split('-')[0],'CFBundleIconFile':'logo.icns'},stream)
+            plistlib.dump({'CFBundleExecutable':'JoyMusic','CFBundleIdentifier':'com.joymusic.desktop','CFBundleName':'JoyMusic','CFBundlePackageType':'APPL','CFBundleShortVersionString':version.split('-')[0],'CFBundleVersion':version.split('-')[0],'CFBundleIconFile':'logo.icns'},stream)
         subprocess.run(['codesign','--force','--deep','--sign','-',str(app.parent)],check=True)
         output = destination / (name + '.zip')
         archive(root, output)

@@ -271,7 +271,7 @@
     <string name="credits_license_desc">Aplikacja JOY MUSIC jest dostępna na licencji GPL-3.0</string>
     <string name="devmode_already_active" translatable="true">Tryb programisty jest już aktywny</string>
     <string name="discord_enable_rich_presence">Discord Rich Presence</string>
-    <string name="discord_listen_to_metrolist">Słucha JOY MUSIC</string>
+    <string name="discord_listen_to_joymusic">Słucha JOY MUSIC</string>
     <string name="discord_login_description">Połącz konto Discord</string>
     <string name="discord_rich_presence">Rich Presence</string>
     <string name="discord_state">Stan</string>
@@ -501,7 +501,7 @@
     <string name="backup_restore_busy">Przetwarzanie…</string>
     <string name="backup_sensitive_title">Wrażliwa kopia zapasowa</string>
     <string name="backup_sensitive_message">Kopie zapasowe zawierają Twoje klucze API, dane logowania do kont, pliki cookie uwierzytelniania, tokeny sesji i inne poufne informacje. Każdy, kto ma ten plik, może uzyskać dostęp do Twoich kont. Przechowuj go w bezpiecznym miejscu i nigdy go nie udostępniaj.</string>
-    <string name="restore_in_progress">Przywracanie kopii zapasowej…\nMetrolist uruchomi się ponownie automatycznie.</string>
+    <string name="restore_in_progress">Przywracanie kopii zapasowej…\nJoyMusic uruchomi się ponownie automatycznie.</string>
     <string name="scrobble_tap_to_disconnect">Stuknij, aby rozłączyć</string>
     <string name="scrobble_enable">Scrobblowanie</string>
     <string name="scrobble_now_playing">Aktualizacje statusu Teraz odtwarzane</string>
@@ -1425,7 +1425,7 @@
     <string name="menu_keyboard_shortcuts">Skróty klawiaturowe</string>
     <string name="menu_application_logs">Dzienniki zdarzeń aplikacji</string>
     <string name="menu_report_issue">Zgłoś problem…</string>
-    <string name="menu_about_metrolist">O JOY MUSIC</string>
+    <string name="menu_about_joymusic">O JOY MUSIC</string>
     <string name="menu_song">Utwór</string>
     <string name="menu_stop">Stop</string>
     <string name="menu_go_to_current_song">Przejdź do bieżącego utworu</string>
@@ -1492,7 +1492,7 @@
     <string name="sensitive_backup">Wrażliwa kopia zapasowa</string>
     <string name="restore_backup_confirm">Przywrócić kopię zapasową?</string>
     <string name="restore">Przywróć</string>
-    <string name="restoring_backup">Przywracanie kopii zapasowej…\nMetrolist uruchomi się ponownie automatycznie.</string>
+    <string name="restoring_backup">Przywracanie kopii zapasowej…\nJoyMusic uruchomi się ponownie automatycznie.</string>
     <string name="hidden_items_count">Ukryte elementy (%1$d)</string>
     <string name="hidden_library_items">Ukryte elementy biblioteki</string>
     <string name="delete_playlist_confirm">Usunąć playlistę?</string>
@@ -1667,7 +1667,7 @@
     <string name="tray_show_window">Pokaż okno</string>
     <string name="tray_show_miniplayer">Pokaż miniodtwarzacz</string>
     <string name="tray_settings">Ustawienia</string>
-    <string name="tray_quit_metrolist">Wyjdź z JOY MUSIC</string>
+    <string name="tray_quit_joymusic">Wyjdź z JOY MUSIC</string>
     <string name="sign_in_discord">Zaloguj się na konto Discord</string>
     <string name="discord_sign_in_unavailable">Logowanie przez Discorda niedostępne</string>
     <string name="sign_in_youtube_music">Zaloguj się do YouTube Music</string>

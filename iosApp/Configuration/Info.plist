@@ -17,9 +17,9 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>METROLIST_VERSION</string>
+    <string>JOYMUSIC_VERSION</string>
     <key>CFBundleVersion</key>
-    <string>METROLIST_VERSION</string>
+    <string>JOYMUSIC_VERSION</string>
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
@@ -29,8 +29,8 @@
             <array>
                 <string>joymusic-auth</string>
                 <string>joymusic</string>
-                <string>metrolist-auth</string>
-                <string>metrolist</string>
+                <string>joymusic-auth</string>
+                <string>joymusic</string>
             </array>
         </dict>
     </array>

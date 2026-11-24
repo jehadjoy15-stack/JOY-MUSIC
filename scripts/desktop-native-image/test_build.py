@@ -18,7 +18,7 @@ class BuildTest(unittest.TestCase):
             root = Path(directory)
             work = root / "work"
             (work / "image").mkdir(parents=True)
-            (work / "image/metrolist").write_text("working image")
+            (work / "image/joymusic").write_text("working image")
             (work / "image/libjvm.so").write_text("working shim")
             (work / "classpath.txt").write_text(str(root / "input.jar"))
             graal = root / "graal"
@@ -57,7 +57,7 @@ for name in ('libjava.so', 'libjvm.so'):
                     self.assertEqual(raised.exception.returncode, 9)
                 else:
                     native_image.build(graal, work, native_image.host_platform(), experiment=True)
-            self.assertEqual((work / "image/metrolist").read_text(), "working image" if fail else "new image")
+            self.assertEqual((work / "image/joymusic").read_text(), "working image" if fail else "new image")
             self.assertEqual((work / "image/libjvm.so").read_text(), "working shim" if fail else "generated shim")
             self.assertEqual(list(work.glob("image-build.*")), [])
             build = json.loads((root / "build.json").read_text())

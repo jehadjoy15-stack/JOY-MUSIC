@@ -13,7 +13,7 @@ These flags do not alter hosted pins. QuackJS handles signature and throttling t
 
 ## Pagination
 
-App callers use `shared/src/commonMain/kotlin/com/metrolist/shared/api/YouTubeRepository.kt`.
+App callers use `shared/src/commonMain/kotlin/com/joymusic/shared/api/YouTubeRepository.kt`.
 
 - Playlist page flows are cold and emit deltas without prefetch. `first()` must not request continuations. Resume from the saved cursor and preserve duplicates by song ID plus playlist occurrence ID.
 - Consumers sharing a playlist cursor reuse successful deltas. Failure or cancellation leaves it retryable. Keep account/session checks around reused results.
@@ -70,7 +70,7 @@ Android closes storage off the playback thread. Video hiding must wait until the
 
 ## Live tests
 
-`Live*` tests under `shared/src/desktopTest/kotlin/com/metrolist/shared/youtube/innertube/` contact YouTube. They require explicit opt-in and never run in CI. Supply `INNERTUBE_TOKEN_BASE64` through the environment or untracked `local.properties` for signed-in probes. Never commit credentials or unsanitized traces.
+`Live*` tests under `shared/src/desktopTest/kotlin/com/joymusic/shared/youtube/innertube/` contact YouTube. They require explicit opt-in and never run in CI. Supply `INNERTUBE_TOKEN_BASE64` through the environment or untracked `local.properties` for signed-in probes. Never commit credentials or unsanitized traces.
 
 Run `./gradlew :shared:desktopTest --tests '*<suite>' <flags>`.
 

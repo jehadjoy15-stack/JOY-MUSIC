@@ -17,7 +17,7 @@ gh workflow run build-ios.yml --ref main
 gh workflow run verify-repository-checks.yml --ref main
 ```
 
-Once the gate passes, release jobs build, sign and upload. They skip unit tests, lint, launch smoke tests, verification-only Gradle dependencies and the duplicate iOS simulator job. They still inspect archive versions and native architectures and verify APK signatures. `metrolist.verifyPackaging=false` removes the Gradle verification dependencies only in these gated jobs; normal builds keep them. Manual package dispatches keep final distributable inspection. `build-desktop.yml` with `windows-manager=true` builds and tests the pinned Windows installer against its portable ZIP, including install, repair and uninstall. Run it when changing installer or payload behavior. See [release verification gate](build-performance.md#release-verification-gate) for where skipped checks run.
+Once the gate passes, release jobs build, sign and upload. They skip unit tests, lint, launch smoke tests, verification-only Gradle dependencies and the duplicate iOS simulator job. They still inspect archive versions and native architectures and verify APK signatures. `joymusic.verifyPackaging=false` removes the Gradle verification dependencies only in these gated jobs; normal builds keep them. Manual package dispatches keep final distributable inspection. `build-desktop.yml` with `windows-manager=true` builds and tests the pinned Windows installer against its portable ZIP, including install, repair and uninstall. Run it when changing installer or payload behavior. See [release verification gate](build-performance.md#release-verification-gate) for where skipped checks run.
 
 The prepare jobs have read-only Actions and checks permissions for this gate. Release credentials stay in the platform and publication jobs. Credential-bearing Gradle configuration caches are never persisted.
 
@@ -29,7 +29,7 @@ Native packages are never published to users. Dispatch `build-desktop-native.yml
 
 `release.yml` runs on `v*.*.*` tags. The tag must be exactly `vMAJOR.MINOR.PATCH` and equal the suffix-free `appVersion`.
 
-Android 14.0.0 uses `versionCode = 154` in `androidApp/build.gradle.kts`, one above legacy 13.7.0's 153. Raise it above the previous stable release before later tags. Legacy v13 apps update from `MetrolistGroup/Metrolist` `releases/latest`: they read the release title as a dotted version and download `Metrolist.apk` or, for Google Cast builds, `Metrolist-with-Google-Cast.apk`. Keep the title as the bare version and both asset names.
+Android 14.0.0 uses `versionCode = 154` in `androidApp/build.gradle.kts`, one above legacy 13.7.0's 153. Raise it above the previous stable release before later tags. Legacy v13 apps update from `jehadjoy15-stack/JOY-MUSIC` `releases/latest`: they read the release title as a dotted version and download `JoyMusic.apk` or, for Google Cast builds, `JoyMusic-with-Google-Cast.apk`. Keep the title as the bare version and both asset names.
 
 1. Run the affected [checks](checks.md) before tagging.
 2. Supply Android signing, Last.fm and Lyprio credentials. The workflow checks the APK with `apksigner`.
@@ -37,7 +37,7 @@ Android 14.0.0 uses `versionCode = 154` in `androidApp/build.gradle.kts`, one ab
 4. Publication validates expected assets and checksums in a draft, then publishes. A rerun cannot modify a published release; it succeeds only when all expected assets already exist.
 5. Sentry finalization and intermediate-artifact cleanup run after successful publication. Failures keep artifacts for retry within their retention period.
 
-Android release builds preserve class/method names but optimize line numbers. Use the published `Metrolist-KMP-mapping.txt` with `retrace` to restore source lines. The redacted crash trace keeps its R8 map identifier.
+Android release builds preserve class/method names but optimize line numbers. Use the published `JoyMusic-KMP-mapping.txt` with `retrace` to restore source lines. The redacted crash trace keeps its R8 map identifier.
 
 After publication, the workflow downloads assets and generates the `distribution-recipes` artifact. External draft PRs require separate configuration; see [distribution](distribution.md#optional-external-proposals).
 

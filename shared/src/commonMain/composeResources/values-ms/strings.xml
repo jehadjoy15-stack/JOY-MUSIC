@@ -242,7 +242,7 @@
     <string name="credits_license_desc">JOY MUSIC dilesenkan di bawah GPL-3.0</string>
     <string name="devmode_already_active" translatable="true">Mod pembangun sudah aktif</string>
     <string name="discord_enable_rich_presence">Aktifkan Discord Rich Presence</string>
-    <string name="discord_listen_to_metrolist">Dengar JOY MUSIC</string>
+    <string name="discord_listen_to_joymusic">Dengar JOY MUSIC</string>
     <string name="discord_login_description">Sambungkan akaun Discord anda</string>
     <string name="discord_rich_presence">Rich presence</string>
     <string name="discord_state">Keadaan</string>
@@ -441,7 +441,7 @@
     <string name="backup_restore_busy">Sedang diproses…</string>
     <string name="backup_sensitive_title">Sandaran sensitif</string>
     <string name="backup_sensitive_message">Fail sandaran mengandungi kunci API, kelayakan akaun, kuki pengesahan, token sesi dan maklumat sensitif anda yang lain. Sesiapa sahaja yang memiliki fail ini PASTI boleh mengakses akaun anda. Simpan fail tersebut dengan selamat dan JANGAN SEKALI-KALI MENGKONGSIKANNYA.</string>
-    <string name="restore_in_progress">Memulihkan sandaran anda…\nMetrolist akan dimulakan semula secara automatik.</string>
+    <string name="restore_in_progress">Memulihkan sandaran anda…\nJoyMusic akan dimulakan semula secara automatik.</string>
     <string name="scrobble_tap_to_disconnect">Ketik untuk memutuskan sambungan</string>
     <string name="scrobble_enable">Aktifkan scrobbling</string>
     <string name="scrobble_now_playing">Kemas kini sedang dimainkan</string>

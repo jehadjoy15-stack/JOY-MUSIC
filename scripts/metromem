@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_NAME="${0##*/}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-OUTPUT_BASE="${XDG_STATE_HOME:-$HOME/.local/state}/metrolist/memory-logs"
+OUTPUT_BASE="${XDG_STATE_HOME:-$HOME/.local/state}/joymusic/memory-logs"
 STAGES=("Startup" "Home Screen" "Screen Transition" "Playing Song"
         "While Playing" "Lyrics Open" "Song Change" "Screen Change")
 
@@ -57,7 +57,7 @@ check_deps() {
 
 find_desktop_pids() {
     local status=0
-    pgrep -f "com.metrolist.desktop.MainKt" || status=$?
+    pgrep -f "com.joymusic.desktop.MainKt" || status=$?
     # pgrep uses 1 for an empty process list; other failures must stop the launch.
     if [[ "$status" -gt 1 ]]; then
         return "$status"
@@ -132,8 +132,8 @@ verify_pid() {
     fi
     local cmdline
     cmdline=$(cat "/proc/$pid/cmdline" 2>/dev/null | tr '\0' ' ')
-    if [[ "$cmdline" != *"java"* && "$cmdline" != *"Metrolist"* && "$cmdline" != *"metrolist"* ]]; then
-        warn "PID $pid does not appear to be a Metrolist/Java process"
+    if [[ "$cmdline" != *"java"* && "$cmdline" != *"JoyMusic"* && "$cmdline" != *"joymusic"* ]]; then
+        warn "PID $pid does not appear to be a JoyMusic/Java process"
         info "Continue anyway? [Y/n]"
         read -r resp
         if [[ "$resp" =~ ^[nN] ]]; then exit 1; fi
@@ -405,7 +405,7 @@ cleanup() {
 run_interactive() {
     echo ""
     echo "═══════════════════════════════════════════════════════════════════"
-    echo "  Metromem -- Metrolist Memory Profiler -- PID $PID"
+    echo "  Metromem -- JoyMusic Memory Profiler -- PID $PID"
     echo "═══════════════════════════════════════════════════════════════════"
     echo ""
     echo "  Suggested stages:"

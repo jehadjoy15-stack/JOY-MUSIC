@@ -5,11 +5,11 @@ const handle = require('./llm-triage.cjs');
 const { extractPolicy, searchQuery, decide, plainComment, marker, alreadyHandled, commentBody } = handle;
 
 const policy = extractPolicy(readFileSync('AGENTS.md', 'utf8'));
-const repo = { owner: 'MetrolistGroup', repo: 'Metrolist' };
+const repo = { owner: 'JoyMusicTeam', repo: 'JoyMusic' };
 const labels = ['bug', 'enhancement', 'duplicate', 'wontfix', 'needs-info', 'audio', 'size: small', 'confirmed']
   .map(name => ({ name, description: `${name} description` }));
 const candidate = { id: 1001, number: 12, title: 'Audio crashes', state: 'closed', body: 'Same crash',
-  repository_url: 'https://api.github.com/repos/MetrolistGroup/Metrolist' };
+  repository_url: 'https://api.github.com/repos/jehadjoy15-stack/JOY-MUSIC' };
 const inputs = { labels, candidates: [candidate], rules: policy.rules, kind: 'issue' };
 function choice(value, probability = 0.95) {
   return { type: 'choice', choice: value, confidence: 1, probabilities: { [value]: probability } };
@@ -149,7 +149,7 @@ test('fixed comments neutralize mentions, markup and injected markers in rule qu
   assert.ok(body.includes('A maintainer can reopen'));
   assert.equal(body.match(/<!--/g).length, 1);
   assert.ok(commentBody({ verdict: 'close_duplicate', duplicate_of: 12 }, repo, 'issue')
-    .includes('https://github.com/MetrolistGroup/Metrolist/issues/12'));
+    .includes('https://github.com/jehadjoy15-stack/JOY-MUSIC/issues/12'));
   assert.ok(commentBody({ verdict: 'close_rejected', rejected_rule: policy.rules[0] }, repo, 'PR')
     .includes(`"${plainComment(policy.rules[0])}"`));
   assert.equal(commentBody({ verdict: 'needs_info' }, repo, 'issue'),
@@ -171,7 +171,7 @@ test('only an exact marker from the Actions bot deduplicates the same verdict', 
 
 test('search stays in the same repository and kind, searches both states, and cannot inject qualifiers', () => {
   const query = searchQuery(repo, 'PR', 'Audio crashes repo:evil/other is:issue OR state:open');
-  assert.ok(query.startsWith('repo:MetrolistGroup/Metrolist is:pr in:title '));
+  assert.ok(query.startsWith('repo:jehadjoy15-stack/JOY-MUSIC is:pr in:title '));
   assert.ok(!query.includes('repo:evil'));
   assert.ok(!query.includes('state:'));
   assert.equal(searchQuery(repo, 'issue', '?!'), null);

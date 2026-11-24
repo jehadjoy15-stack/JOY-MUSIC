@@ -1,6 +1,6 @@
 package meow.nyx.spotlib
 
-import com.metrolist.shared.youtube.playback.PlaybackEventLog
+import com.joymusic.shared.youtube.playback.PlaybackEventLog
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders

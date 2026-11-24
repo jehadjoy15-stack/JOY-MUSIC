@@ -43,7 +43,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     --clean)
       echo "Cleaning iOS build artifacts..."
-      rm -rf "$build_dir" "$derived_data_dir" "$dist_dir/Metrolist.ipa" "$dist_dir/Metrolist.app"
+      rm -rf "$build_dir" "$derived_data_dir" "$dist_dir/JoyMusic.ipa" "$dist_dir/JoyMusic.app"
       echo "Clean finished."
       exit 0
       ;;
@@ -66,12 +66,12 @@ marketing_version="$(bash "$root_dir/scripts/ios_version.sh")"
 build_version="$marketing_version"
 
 echo "=================================================="
-echo " Building Metrolist iOS ($configuration - Mode: $mode)"
+echo " Building JoyMusic iOS ($configuration - Mode: $mode)"
 echo "=================================================="
 
 if [[ "$mode" == "ipa" ]]; then
   echo "Step 1: Preparing app bundle for IPA packaging..."
-  archive_path="$build_dir/Metrolist.xcarchive"
+  archive_path="$build_dir/JoyMusic.xcarchive"
   rm -rf "$archive_path"
   
   xcodebuild archive \
@@ -133,9 +133,9 @@ elif [[ "$mode" == "sim" ]]; then
 
   app_path=$(find "$derived_data_dir/Build/Products/$configuration-iphonesimulator" -name "*.app" -type d | head -n 1)
   if [[ -n "$app_path" && -d "$app_path" ]]; then
-    rm -rf "$dist_dir/Metrolist.app"
-    cp -R "$app_path" "$dist_dir/Metrolist.app"
-    echo "Simulator App bundle created: $dist_dir/Metrolist.app"
+    rm -rf "$dist_dir/JoyMusic.app"
+    cp -R "$app_path" "$dist_dir/JoyMusic.app"
+    echo "Simulator App bundle created: $dist_dir/JoyMusic.app"
   else
     echo "Error: Could not find built app bundle in derived data."
     exit 1
@@ -144,7 +144,7 @@ elif [[ "$mode" == "sim" ]]; then
   if [[ "$run_after_build" == true ]]; then
     echo "Step 2: Deploying and launching on booted iOS Simulator..."
     if xcrun simctl list devices | grep -q "Booted"; then
-      xcrun simctl install booted "$dist_dir/Metrolist.app"
+      xcrun simctl install booted "$dist_dir/JoyMusic.app"
       xcrun simctl launch booted "$bundle_id"
       echo "App launched on iOS Simulator."
     else

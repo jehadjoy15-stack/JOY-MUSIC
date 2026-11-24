@@ -70,7 +70,7 @@ class DmgPackagingTest(unittest.TestCase):
             (case / 'dmgs').mkdir(parents=True)
             (case / 'background.tiff').write_text('background artwork')
             (case / 'logo.icns').write_text('volume artwork')
-            (case / 'dmgs/Metrolist.dmg').write_text('original image')
+            (case / 'dmgs/JoyMusic.dmg').write_text('original image')
             registrations.append(f'''
 tasks.register<PatchDmgAppearanceTask>("patch{index}") {{
     backgroundFile.set(layout.projectDirectory.file("{name}/background.tiff"))
@@ -106,22 +106,22 @@ tasks.register<PatchDmgAppearanceTask>("patch{index}") {{
         self.assertEqual(['convert', 'attach', 'detach', 'convert'], [args[0] for args in hdiutil])
         self.assertEqual(['UDRW', 'ULMO'], [args[args.index('-format') + 1] for args in hdiutil if args[0] == 'convert'])
         self.assertEqual('swift', commands[-1][0])
-        contents = json.loads((case / 'dmgs/Metrolist.dmg').read_text())
+        contents = json.loads((case / 'dmgs/JoyMusic.dmg').read_text())
         self.assertEqual('background artwork', contents['.background/background.tiff'])
         self.assertEqual('volume artwork', contents['.VolumeIcon.icns'])
         self.assertEqual('C', contents['finder-flags'])
         layout = (case / 'layout.scpt').read_text()
         for instruction in ('{400, 100, 1060, 528}', '{163, 200}', '{497, 189}', 'delay 5'):
             self.assertIn(instruction, layout)
-        self.assertEqual(['Metrolist.dmg'], [p.name for p in (case / 'dmgs').iterdir()])
+        self.assertEqual(['JoyMusic.dmg'], [p.name for p in (case / 'dmgs').iterdir()])
 
     def test_failed_detach_retains_mount_and_original_image(self):
         commands = self.commands('detach-failure')
         self.assertEqual(5, sum(command[:2] == ['hdiutil', 'detach'] for command in commands))
         self.assertEqual(1, sum(command[:2] == ['hdiutil', 'convert'] for command in commands))
         case = self.root / 'detach-failure/dmgs'
-        self.assertEqual('original image', (case / 'Metrolist.dmg').read_text())
-        mounts = list(case.glob('metrolist-bg-*/mount/mounted-data'))
+        self.assertEqual('original image', (case / 'JoyMusic.dmg').read_text())
+        mounts = list(case.glob('joymusic-bg-*/mount/mounted-data'))
         self.assertEqual(1, len(mounts))
         self.assertEqual('retain me', mounts[0].read_text())
 
@@ -137,8 +137,8 @@ tasks.register<PatchDmgAppearanceTask>("patch{index}") {{
 
     def assert_original_and_cleanup(self, name):
         case = self.root / name / 'dmgs'
-        self.assertEqual('original image', (case / 'Metrolist.dmg').read_text())
-        self.assertEqual(['Metrolist.dmg'], [p.name for p in case.iterdir()])
+        self.assertEqual('original image', (case / 'JoyMusic.dmg').read_text())
+        self.assertEqual(['JoyMusic.dmg'], [p.name for p in case.iterdir()])
         self.assertNotEqual(0, self.result.returncode)
 
 
@@ -178,7 +178,7 @@ tasks.register("proguardReleaseJars") {
             ('win-x64', 'win', 'x86_64', 'x86_64'), ('win-arm64', 'win', 'aarch64', 'aarch64'),
         ):
             production = (selection + trimming).replace('System.getProperty("os.arch")', f'"{host_arch}"')
-            arguments = [f'-Ptest.os={os_name}', f'-Pmetrolist.desktop.arch={arch}']
+            arguments = [f'-Ptest.os={os_name}', f'-Pjoymusic.desktop.arch={arch}']
             jars = cls.root / name / 'jars'
             jars.mkdir(parents=True)
             for jar, entries in {
@@ -223,7 +223,7 @@ tasks.register("proguardReleaseJars") {
         for mode, architecture in (('cross', 'x64'), ('cross-arm64', 'arm64')):
             with self.subTest(mode=mode):
                 self.assertEqual({'META-INF/MANIFEST.MF', 'META-INF/LICENSE'},
-                                 self.entries(mode, 'metrolist-skiko-awt-runtime-all-test.jar'))
+                                 self.entries(mode, 'joymusic-skiko-awt-runtime-all-test.jar'))
                 jars = self.root / mode / 'jars'
                 self.assertFalse((jars / 'skiko-awt-runtime-all-test.jar').exists())
                 native = f'libskiko-macos-{architecture}.dylib'

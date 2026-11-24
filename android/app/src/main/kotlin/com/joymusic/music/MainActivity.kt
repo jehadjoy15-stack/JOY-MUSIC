@@ -1534,11 +1534,26 @@ class MainActivity : ComponentActivity() {
         val listenCode =
             uri.getQueryParameter("code")
                 ?: uri.getQueryParameter("room")
+                ?: uri.getQueryParameter("r")
                 ?: uri.pathSegments.getOrNull(1)
-        val isListenLink = uri.pathSegments.firstOrNull() == "listen" || uri.host?.equals("listen", ignoreCase = true) == true
+        val isListenLink = uri.pathSegments.firstOrNull() == "listen" || uri.host?.equals("listen", ignoreCase = true) == true ||
+            uri.pathSegments.firstOrNull() == "room" || uri.host?.equals("room", ignoreCase = true) == true ||
+            uri.pathSegments.firstOrNull() == "party" || uri.host?.equals("party", ignoreCase = true) == true
         if (!listenCode.isNullOrBlank() && isListenLink) {
+            val finalCode = listenCode.trim().uppercase()
             val username = dataStore.get(ListenTogetherUsernameKey, "").ifBlank { "Guest" }
-            listenTogetherManager.joinRoom(listenCode, username)
+            lifecycleScope.launch(Dispatchers.IO) {
+                safeDataStoreEdit {
+                    it[com.joymusic.music.constants.ListenTogetherRoomCodeKey] = finalCode
+                }
+            }
+            listenTogetherManager.connect()
+            listenTogetherManager.joinRoom(finalCode, username)
+            try {
+                navController.navigate("listen_together_from_topbar")
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to navigate to listen together screen")
+            }
             return
         }
 

@@ -20,13 +20,13 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
-ICON_DIR = ROOT / "shared/src/commonMain/kotlin/com/metrolist/shared/ui/icons"
+ICON_DIR = ROOT / "shared/src/commonMain/kotlin/com/joymusic/shared/ui/icons"
 UPSTREAM_REVISION = "10ecc14790612ca8fd164e3f4ffe9c16fc50d5b7"
 ICON_FILES = (
-    "MetrolistIconsOutlined.kt",
-    "MetrolistIconsFilled.kt",
-    "MetrolistIconsRounded.kt",
-    "MetrolistIcons.kt",
+    "JoyMusicIconsOutlined.kt",
+    "JoyMusicIconsFilled.kt",
+    "JoyMusicIconsRounded.kt",
+    "JoyMusicIcons.kt",
     "SongStatusIcons.kt",
 )
 ALIASES = {
@@ -87,12 +87,12 @@ def svg_path(svg: bytes) -> str:
 def fetch_path(revision: str, glyph: str, family: str, fill: int) -> str:
     filename = f"{glyph}{'_fill1' if fill else ''}_24px.svg"
     relative = f"symbols/web/{glyph}/materialsymbols{family}/{filename}"
-    cache = Path(tempfile.gettempdir()) / "metrolist-material-symbols" / revision / relative
+    cache = Path(tempfile.gettempdir()) / "joymusic-material-symbols" / revision / relative
     if cache.exists():
         return svg_path(cache.read_bytes())
     request = urllib.request.Request(
         f"https://raw.githubusercontent.com/google/material-design-icons/{revision}/{relative}",
-        headers={"User-Agent": "metrolist-icon-generator"},
+        headers={"User-Agent": "joymusic-icon-generator"},
     )
     with urllib.request.urlopen(request, timeout=60) as response:
         svg = response.read()
@@ -134,7 +134,7 @@ def refresh(revision: str, verify: bool, styles: list[str] | None = None, fill: 
 
 
 def add_icons(revision: str, style: str, names: list[str], fill: int | None = None) -> None:
-    path = ICON_DIR / f"MetrolistIcons{style.capitalize()}.kt"
+    path = ICON_DIR / f"JoyMusicIcons{style.capitalize()}.kt"
     source = path.read_text()
     entries = {}
     for prop in names:
@@ -160,7 +160,7 @@ def add_icons(revision: str, style: str, names: list[str], fill: int | None = No
 def refresh_taskbar(revision: str) -> None:
     from PIL import Image
 
-    with tempfile.TemporaryDirectory(prefix="metrolist-taskbar-") as directory:
+    with tempfile.TemporaryDirectory(prefix="joymusic-taskbar-") as directory:
         for filename, glyph in TASKBAR_ICONS.items():
             solid = fetch_path(revision, glyph, "outlined", 1)
             outline = fetch_path(revision, glyph, "outlined", 0)

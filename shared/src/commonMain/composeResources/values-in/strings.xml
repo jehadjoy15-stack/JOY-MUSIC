@@ -413,7 +413,7 @@
     <string name="backup_restore_export_desc">Ekspor pengaturan, database koleksi, playlist, lagu yang disukai, dan riwayat ke file zip</string>
     <string name="backup_restore_import_desc">Pulihkan cadangan JOY MUSIC. Aplikasi akan dimulai ulang setelah pemulihan berhasil.</string>
     <string name="backup_sensitive_title">Cadangan sensitif</string>
-    <string name="restore_in_progress">Memulihkan cadangan Anda…\nMetrolist akan dimuat ulang secara otomatis.</string>
+    <string name="restore_in_progress">Memulihkan cadangan Anda…\nJoyMusic akan dimuat ulang secara otomatis.</string>
     <string name="scrobble_tap_to_disconnect">Tekan untuk memutuskan sambungan</string>
     <string name="scrobble_enable">Scrobbling</string>
     <string name="scrobble_now_playing">Pembaruan sedang diputar</string>
@@ -1169,7 +1169,7 @@
     <string name="sensitive_backup">Cadangan sensitif</string>
     <string name="restore_backup_confirm">Pulihkan cadangan?</string>
     <string name="restore">Pulihkan</string>
-    <string name="restoring_backup">Memulihkan cadangan Anda…\nMetrolist akan memuat ulang sendirinya.</string>
+    <string name="restoring_backup">Memulihkan cadangan Anda…\nJoyMusic akan memuat ulang sendirinya.</string>
     <string name="settings_layout_canvas">Kanvas</string>
     <string name="spotify_import_error_sign_in_failed">Gagal masuk ke Spotify.</string>
     <plurals name="spotify_import_skipped_playlists">
@@ -1231,7 +1231,7 @@
     <string name="menu_keyboard_shortcuts">Pintasan keyboard</string>
     <string name="menu_application_logs">Log aplikasi</string>
     <string name="menu_report_issue">Laporkan masalah…</string>
-    <string name="menu_about_metrolist">Tentang JOY MUSIC</string>
+    <string name="menu_about_joymusic">Tentang JOY MUSIC</string>
     <string name="menu_song">Lagu</string>
     <string name="menu_back">Kembali</string>
     <string name="menu_new_playlist">Playlist baru</string>
@@ -1281,7 +1281,7 @@
     <string name="tray_show_window">Tampilkan jendela</string>
     <string name="tray_show_miniplayer">Tampilkan pemutar mini</string>
     <string name="tray_settings">Pengaturan</string>
-    <string name="tray_quit_metrolist">Keluar JOY MUSIC</string>
+    <string name="tray_quit_joymusic">Keluar JOY MUSIC</string>
     <string name="sign_in_discord">Masuk ke Discord</string>
     <string name="openrouter_auth_instruction">Tempel kode otorisasi yang ditampilkan OpenRouter di peramban Anda.</string>
     <string name="openrouter_auth_code">Kode otorisasi</string>
@@ -1414,7 +1414,7 @@
     <string name="history_playlist_weekly">Lagu Teratas Mingguan</string>
     <string name="history_playlist_monthly">Lagu Teratas Bulanan</string>
     <string name="queue_youtube_history_when_offline_desc">Simpan laporan pemutaran di perangkat ini dan coba lagi setelah terhubung kembali saat aplikasi berjalan. Riwayat yang sedang dijeda tidak akan dicatat</string>
-    <string name="discord_listen_to_metrolist">Dengarkan JOY MUSIC</string>
+    <string name="discord_listen_to_joymusic">Dengarkan JOY MUSIC</string>
     <string name="app_icon_zenith_black">Zenith Black</string>
     <string name="app_icon_zenith_white">Zenith White</string>
     <string name="mysterious_fourth_tab">Tab keempat yang misterius</string>

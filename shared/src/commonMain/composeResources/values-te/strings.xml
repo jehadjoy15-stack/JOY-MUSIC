@@ -254,7 +254,7 @@
     <string name="credits_license_desc">GPL-3.0 JOY MUSIC ని అనుమతించింది.</string>
     <string name="devmode_already_active" translatable="true">డెవలపర్ మోడ్ ఇప్పటికే పని చేస్తోంది</string>
     <string name="discord_enable_rich_presence">Discord Rich Presence</string>
-    <string name="discord_listen_to_metrolist">JOY MUSIC ని వినండీ</string>
+    <string name="discord_listen_to_joymusic">JOY MUSIC ని వినండీ</string>
     <string name="discord_login_description">మీ Discord Account ను చేర్చండి</string>
     <string name="discord_rich_presence">Rich Presence</string>
     <string name="discord_state">స్థితి</string>
@@ -441,7 +441,7 @@
     <string name="available_devices">అందుబాటులో ఉన్న పరికరాలు</string>
     <string name="no_device_connected">ఏ పరికరం కనెక్ట్ కాలేదు</string>
     <string name="no_device_found">ఏ పరికరం కనుగొనబడలేదు</string>
-    <string name="no_compatible_devices">Google Cast, FCast, DLNA లేదా Metrolistకు అనుకూలమైన పరికరం కనుగొనబడలేదు.</string>
+    <string name="no_compatible_devices">Google Cast, FCast, DLNA లేదా JoyMusicకు అనుకూలమైన పరికరం కనుగొనబడలేదు.</string>
     <string name="show_player_cast_button">కాస్ట్ బటన్ చూపించు</string>
     <string name="show_player_video_button">ఆడియో/వీడియో ఎంపికను చూపించు</string>
     <string name="onboarding_language_lyrics_description">యాప్ భాషను, పాటల సాహిత్యం కనిపించే విధానాన్ని ఎంచుకోండి.</string>

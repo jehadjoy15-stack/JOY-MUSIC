@@ -37,7 +37,7 @@ val currentOperatingSystem =
         .current()
 val targetArchitecture =
     providers
-        .gradleProperty("metrolist.desktop.arch")
+        .gradleProperty("joymusic.desktop.arch")
         .orElse(System.getProperty("os.arch"))
         .get()
         .lowercase()
@@ -91,7 +91,7 @@ configurations.matching { it.name.startsWith("jvm") }.configureEach {
     exclude(group = "it.krzeminski")
 }
 
-group = "com.metrolist"
+group = "com.joymusic"
 val appVersion = providers.gradleProperty("appVersion").get()
 version = appVersion
 
@@ -205,7 +205,7 @@ tasks.matching { it.name == "proguardReleaseJars" }.configureEach {
                 }
             }
             // Compose unpacks skiko-* JARs for the host; cross-target natives are already loose packaging inputs.
-            val target = if (isSkikoRuntime) File(jar.parentFile, "metrolist-${jar.name}") else jar
+            val target = if (isSkikoRuntime) File(jar.parentFile, "joymusic-${jar.name}") else jar
             Files.move(stripped.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING)
             if (target != jar) jar.delete()
         }
@@ -562,7 +562,7 @@ tasks.withType<JavaExec>().configureEach {
             detectCursorSize()?.let { size ->
                 environment("XCURSOR_SIZE", size)
             }
-            environment("METROLIST_CURSOR_CONFIGURED", "1")
+            environment("JOYMUSIC_CURSOR_CONFIGURED", "1")
         }
     }
 
@@ -590,13 +590,13 @@ tasks.withType<Test>().configureEach {
 val sentryDebugMetaProperties = layout.buildDirectory.file("generated/sentry/sentry-debug-meta.properties")
 val sentrySourceRevision =
     providers
-        .gradleProperty("metrolist.sourceRevision")
+        .gradleProperty("joymusic.sourceRevision")
         .orElse(providers.environmentVariable("GITHUB_SHA"))
         .map(String::trim)
         .filter { it.matches(Regex("[0-9a-fA-F]{40}")) }
         .orElse("local")
         .get()
-val sentryBundleId = UUID.nameUUIDFromBytes("com.metrolist.desktop:$platform:$appVersion:$sentrySourceRevision".encodeToByteArray())
+val sentryBundleId = UUID.nameUUIDFromBytes("com.joymusic.desktop:$platform:$appVersion:$sentrySourceRevision".encodeToByteArray())
 val generateSentryDebugMetaProperties =
     tasks.register<WriteProperties>("generateSentryDebugMetaProperties") {
         destinationFile.set(sentryDebugMetaProperties)
@@ -615,7 +615,7 @@ tasks.named<ProcessResources>("jvmProcessResources") {
 }
 
 compose.resources {
-    packageOfResClass = "com.metrolist.desktop.generated.resources"
+    packageOfResClass = "com.joymusic.desktop.generated.resources"
 }
 
 // Compose strips command-line tools from its runtime; temporarily restore java to generate the base CDS archive.
@@ -701,9 +701,9 @@ compose.desktop {
             }
         }
 
-        mainClass = "com.metrolist.desktop.MainKt"
+        mainClass = "com.joymusic.desktop.MainKt"
         javaHome =
-            providers.gradleProperty("metrolist.desktop.javaHome").orNull?.let { home ->
+            providers.gradleProperty("joymusic.desktop.javaHome").orNull?.let { home ->
                 val release = Properties().apply { file("$home/release").inputStream().use(::load) }
                 val architecture = release.getProperty("OS_ARCH").trim('"')
                 val expectedArchitectures = if (isArm64) setOf("aarch64", "arm64") else setOf("x86_64", "amd64")
@@ -721,9 +721,9 @@ compose.desktop {
                 "-Dorg.slf4j.simpleLogger.log.org.freedesktop.dbus=warn",
                 "-XX:ErrorFile=${
                     when (platform) {
-                        "linux" -> "\$METROLIST_JVM_ERROR_FILE"
-                        "win" -> "\$USERPROFILE/.local/state/metrolist/logs/hs_err_pid%p.log"
-                        else -> "\$HOME/.local/state/metrolist/logs/hs_err_pid%p.log"
+                        "linux" -> "\$JOYMUSIC_JVM_ERROR_FILE"
+                        "win" -> "\$USERPROFILE/.local/state/joymusic/logs/hs_err_pid%p.log"
+                        else -> "\$HOME/.local/state/joymusic/logs/hs_err_pid%p.log"
                     }
                 }",
             ) + desktopMemoryJvmArgs
@@ -828,8 +828,8 @@ compose.desktop {
                                 <array>
                                     <string>joymusic</string>
                                     <string>joymusic-auth</string>
-                                    <string>metrolist</string>
-                                    <string>metrolist-auth</string>
+                                    <string>joymusic</string>
+                                    <string>joymusic-auth</string>
                                 </array>
                             </dict>
                         </array>
@@ -864,7 +864,7 @@ afterEvaluate {
         }
         if (name.startsWith("createReleaseDistributable") || name.startsWith("packageRelease")) {
             launcherJvmArgs.addAll(
-                "-Dmetrolist.cds.cache=$cdsCache",
+                "-Djoymusic.cds.cache=$cdsCache",
                 "-Xshare:auto",
                 "-XX:+VerifySharedSpaces",
                 "-XX:+AutoCreateSharedArchive",

@@ -277,7 +277,7 @@
     <string name="credits_license_name">مجوز</string>
     <string name="credits_license_desc">مترولیست با مجوز GPL-3.0 منتشر می‌شود.</string>
     <string name="devmode_already_active" translatable="true">حالت برنامه‌نویسی از قبل فعال شده است</string>
-    <string name="discord_listen_to_metrolist">شنیدن مترولیست</string>
+    <string name="discord_listen_to_joymusic">شنیدن مترولیست</string>
     <string name="discord_login_description">اتصال به حساب دیسکورد</string>
     <string name="discord_state">حالت</string>
     <string name="discord_button1_text_default">گوش دادن در YouTube Music</string>

@@ -221,7 +221,7 @@
     <string name="available_devices">利用可能なデバイス</string>
     <string name="no_device_connected">デバイスが接続されていません</string>
     <string name="no_device_found">デバイスが見つかりません</string>
-    <string name="no_compatible_devices">Google Cast、FCast、DLNA、Metrolistに対応するデバイスが見つかりません。</string>
+    <string name="no_compatible_devices">Google Cast、FCast、DLNA、JoyMusicに対応するデバイスが見つかりません。</string>
     <string name="show_player_cast_button">キャストボタンを表示</string>
     <string name="show_player_video_button">音声・動画の切り替えを表示</string>
     <string name="onboarding_language_lyrics_description">アプリの言語と歌詞の表示方法を選びましょう。</string>

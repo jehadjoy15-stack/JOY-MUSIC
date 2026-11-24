@@ -1,0 +1,19 @@
+cask "joymusic" do
+  arch arm: "arm64", intel: "x64"
+
+  version "@VERSION@"
+  sha256 arm:   "@MACOS_ARM64_SHA256@",
+         intel: "@MACOS_X64_SHA256@"
+
+  url "https://github.com/jehadjoy15-stack/JOY-MUSIC/releases/download/v#{version}/joymusic-desktop-macos-#{arch}-#{version}.dmg"
+  name "JoyMusic"
+  desc "YouTube Music desktop client"
+  homepage "https://github.com/jehadjoy15-stack/JOY-MUSIC"
+
+  livecheck do
+    url :url
+    strategy :github_latest
+  end
+
+  app "JoyMusic.app"
+end

@@ -1,8 +1,8 @@
-package com.metrolist.desktop.nativeimage
+package com.joymusic.desktop.nativeimage
 
-import com.metrolist.desktop.utils.configureDesktopJvmErrorFile
+import com.joymusic.desktop.utils.configureDesktopJvmErrorFile
 import java.nio.file.Path
-import com.metrolist.desktop.main as desktopMain
+import com.joymusic.desktop.main as desktopMain
 
 fun main(args: Array<String>) {
     if (System.getProperty("org.graalvm.nativeimage.imagecode") == "runtime") {
@@ -25,7 +25,7 @@ fun main(args: Array<String>) {
         System.setProperty("compose.application.resources.dir", resources.normalize().toString())
         configureDesktopJvmErrorFile()
     }
-    if (System.getProperty("metrolist.native.backendSmoke").toBoolean()) {
+    if (System.getProperty("joymusic.native.backendSmoke").toBoolean()) {
         nativeBackendSmoke()
     } else {
         desktopMain(args)

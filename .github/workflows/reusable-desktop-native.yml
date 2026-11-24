@@ -57,15 +57,15 @@ jobs:
       - name: Cache verified GraalVM archives
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
-          path: ${{ runner.tool_cache }}/metrolist-graalvm/archives
+          path: ${{ runner.tool_cache }}/joymusic-graalvm/archives
           key: graalvm-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/graalvm-pins.json', 'scripts/desktop-native-image/toolchain.py') }}
 
       - name: Install pinned GraalVM
         shell: bash
         run: |
           python scripts/desktop-native-image/toolchain.py --platform "$NATIVE_PLATFORM" \
-            --cache "$RUNNER_TOOL_CACHE/metrolist-graalvm/archives" \
-            --destination "$RUNNER_TOOL_CACHE/metrolist-graalvm/current"
+            --cache "$RUNNER_TOOL_CACHE/joymusic-graalvm/archives" \
+            --destination "$RUNNER_TOOL_CACHE/joymusic-graalvm/current"
           mkdir -p "$NATIVE_WORK/evidence"
 
       - name: Prepare Linux native dependencies and user scope
@@ -109,7 +109,7 @@ jobs:
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
         run: |
           ./gradlew -I scripts/desktop-native-image/prepare.init.gradle \
-            -PnativeExperimentDir="$NATIVE_WORK" -Pmetrolist.sourceRevision="$GITHUB_SHA" \
+            -PnativeExperimentDir="$NATIVE_WORK" -Pjoymusic.sourceRevision="$GITHUB_SHA" \
             :desktopApp:prepareNativeImage --no-daemon --no-build-cache --no-configuration-cache
 
       - name: Trace Windows startup when a desktop is available

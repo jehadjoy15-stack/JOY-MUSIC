@@ -11,7 +11,7 @@ The supported path keeps Serial GC, `-Os`, a 32 MiB initial heap and a 384 MiB m
 | macOS ARM64 | Native `.app` and ZIP | Disabled until `ENABLE_NATIVE_MACOS_ARM64=true` |
 | Linux ARM64 | Native app directory and AppImage | Disabled until `ENABLE_NATIVE_LINUX_ARM64=true` |
 
-Windows ARM64 and macOS Intel keep their JVM packages. Every existing JVM package stays the default. The native Linux artifact has a separate `metrolist-desktop-native-linux-x64-<version>.AppImage` name. Native Windows uses `Metrolist.exe`, the existing portable install-manifest schema, and `resources/windows` login helper/checksum layout. Its ZIP has a separate native filename. The native path validates the launcher/helper/DLL architecture and helper checksum.
+Windows ARM64 and macOS Intel keep their JVM packages. Every existing JVM package stays the default. The native Linux artifact has a separate `joymusic-desktop-native-linux-x64-<version>.AppImage` name. Native Windows uses `JoyMusic.exe`, the existing portable install-manifest schema, and `resources/windows` login helper/checksum layout. Its ZIP has a separate native filename. The native path validates the launcher/helper/DLL architecture and helper checksum.
 
 ### Build locally
 
@@ -19,7 +19,7 @@ Prepare with the opt-in Gradle init script. This adds native entry points only f
 
 ```sh
 JAVA_TOOL_OPTIONS=-Djava.awt.headless=true \
-  /mnt/work/projects/Metrolist-KMP-lanes/bin/gradlew-lane \
+  /mnt/work/projects/JoyMusic-KMP-lanes/bin/gradlew-lane \
   -I scripts/desktop-native-image/prepare.init.gradle \
   -PnativeExperimentDir=/tmp/r6-native-image/supported \
   :desktopApp:prepareNativeImage :desktopApp:compileKotlinJvm \
@@ -34,7 +34,7 @@ python3 scripts/desktop-native-image/package.py \
   > /tmp/r6-native-image/package-supported.log 2>&1
 ```
 
-On Linux the builder holds `/tmp/metrolist-gradle.lock` and enters a 16 GiB user scope with 2 GiB swap and CPU weight 50. Native Image gets a 12 GiB heap, four active processors and two compiler threads. Gradle and Native Image never overlap. Native Image arguments use a file, which also avoids Windows' batch command-line length limit. Failed builds leave the last good image intact.
+On Linux the builder holds `/tmp/joymusic-gradle.lock` and enters a 16 GiB user scope with 2 GiB swap and CPU weight 50. Native Image gets a 12 GiB heap, four active processors and two compiler threads. Gradle and Native Image never overlap. Native Image arguments use a file, which also avoids Windows' batch command-line length limit. Failed builds leave the last good image intact.
 
 For Windows use the same prepare task on a Windows x64 host, build the existing `metro-wv2-helper` for `win-x64` first, then pass `--platform windows-x64` to the builder and packager. GraalVM requires Visual Studio 2022 17.6 or newer with C++ and the Windows SDK. The [GraalVM Windows guide](https://www.graalvm.org/jdk25/getting-started/windows/) describes those requirements. The CI job builds the helper with the same SDK and publish options as JVM Windows packaging. The executable uses the Windows GUI subsystem and `mainCRTStartup`, matching [Nucleus's linker options](https://github.com/NucleusFramework/Nucleus/blob/67e9920f171a6d569e520d95b53c8e594b44a4d4/plugin-build/plugin/src/main/kotlin/dev/nucleusframework/desktop/application/internal/configureGraalvmApplication.kt#L1198). The builder rejects other host/target combinations.
 
@@ -48,7 +48,7 @@ Releases never include native packages. The native package and its separate evid
 
 The toolchain cache holds only the original builder archives. Its key covers OS, architecture, the complete pin manifest and installer source. Every restore rechecks SHA-256 and extracts afresh. A missing or corrupt cache triggers a verified download. Native images, profiles, traces and compiled application outputs are never cached. Native jobs restore Gradle caches read-only, disable the Gradle build cache and do not persist configuration caches, so generated credentials cannot enter new caches. Every native invocation performs a full build from current classes, metadata, resources and sidecars.
 
-Windows loads pinned Nucleus Windows, AWT, font, graphics and JNA/COM metadata alongside Skiko's Direct3D entries. Wry metadata is adapted to the app's current `io.github.kdroidfilter` namespace, with class names checked against `wrywebview:1.0.0-beta-02`. Metrolist's own window procedures, User32 interface, MENUITEMINFO and the JDK's DirectSound mixer/control types have additional Windows metadata. Windows DLL resources and JavaCPP's platform natives are retained. When an interactive desktop exists, the CI tracing agent merges a Windows JVM startup trace before compilation. On service runners without a desktop, the code-derived metadata remains the input.
+Windows loads pinned Nucleus Windows, AWT, font, graphics and JNA/COM metadata alongside Skiko's Direct3D entries. Wry metadata is adapted to the app's current `io.github.kdroidfilter` namespace, with class names checked against `wrywebview:1.0.0-beta-02`. JoyMusic's own window procedures, User32 interface, MENUITEMINFO and the JDK's DirectSound mixer/control types have additional Windows metadata. Windows DLL resources and JavaCPP's platform natives are retained. When an interactive desktop exists, the CI tracing agent merges a Windows JVM startup trace before compilation. On service runners without a desktop, the code-derived metadata remains the input.
 
 ### Test and inspect
 
@@ -163,9 +163,9 @@ The original research needed no custom substitutions or dependency upgrades. The
 | FFmpeg / JavaCPP | Trace local and YouTube playback to include loader, callback and JNI paths. Keep dependency-provided metadata and embedded native resources. | Agent metadata, real-time playback observations and private audio links. |
 | Java Sound / ALSA / PipeWire | The test server has no session manager. Configure its stream ports from the reported audio format, then link stereo output to a clocked null sink. This is experiment setup only. | `audio/server.log`, `audio/links.log` in each playing run. |
 
-The tracing agent ran on the unshrunk JVM application for Home, local playback and YouTube. Its dedicated [resource directory](../scripts/desktop-native-image/resources/META-INF/native-image/com.metrolist/desktop-experiment/) contains 562 reflection entries and 310 resource entries, without absolute build or profile paths. Dependency jars supply their own metadata. Tracing does not cover every application path.
+The tracing agent ran on the unshrunk JVM application for Home, local playback and YouTube. Its dedicated [resource directory](../scripts/desktop-native-image/resources/META-INF/native-image/com.joymusic/desktop-experiment/) contains 562 reflection entries and 310 resource entries, without absolute build or profile paths. Dependency jars supply their own metadata. Tracing does not cover every application path.
 
-Additional metadata comes from Nucleus commit `67e9920f171a6d569e520d95b53c8e594b44a4d4`. The [provenance file](../scripts/desktop-native-image/resources/META-INF/native-image/com.metrolist/desktop-experiment/nucleus/README.md) lists the exact upstream files and retained licenses. The experiment uses these packs directly without changing the app's Nucleus plugin or dependencies. The working references were [compose-graal-vm](https://github.com/kdroidFilter/compose-graal-vm), [Nucleus GraalVM guidance](https://nucleusframework.dev/en/docs/performance/graalvm/), [Nucleus automatic metadata](https://nucleusframework.dev/en/docs/performance/graalvm/automatic-metadata/), [sqlite-jdbc Native Image support](https://github.com/xerial/sqlite-jdbc/blob/master/README.adoc#graalvm-native-image-support) and [JavaCPP releases](https://github.com/bytedeco/javacpp/releases).
+Additional metadata comes from Nucleus commit `67e9920f171a6d569e520d95b53c8e594b44a4d4`. The [provenance file](../scripts/desktop-native-image/resources/META-INF/native-image/com.joymusic/desktop-experiment/nucleus/README.md) lists the exact upstream files and retained licenses. The experiment uses these packs directly without changing the app's Nucleus plugin or dependencies. The working references were [compose-graal-vm](https://github.com/kdroidFilter/compose-graal-vm), [Nucleus GraalVM guidance](https://nucleusframework.dev/en/docs/performance/graalvm/), [Nucleus automatic metadata](https://nucleusframework.dev/en/docs/performance/graalvm/automatic-metadata/), [sqlite-jdbc Native Image support](https://github.com/xerial/sqlite-jdbc/blob/master/README.adoc#graalvm-native-image-support) and [JavaCPP releases](https://github.com/bytedeco/javacpp/releases).
 
 Oracle GraalVM 25.0.4 and Liberica NIK Full 25.0.2 both reproduced the original monitor assertion. Disabling Kotlin bytecode optimization did not fix it. [Graal issue 12694](https://github.com/oracle/graal/issues/12694) reports a similar graph error with ProGuard output; this experiment uses original jars, so it does not establish the same cause. All successful measured binaries use the installed Oracle toolchain on disk. No downloaded JDK or NIK archive remains under `/tmp`.
 
@@ -184,9 +184,9 @@ Prepare both native inputs and the release JVM control through the lane wrapper.
 ```sh
 mkdir -p /tmp/r6-native-image
 JAVA_TOOL_OPTIONS=-Djava.awt.headless=true \
-  /mnt/work/projects/Metrolist-KMP-lanes/bin/gradlew-lane \
+  /mnt/work/projects/JoyMusic-KMP-lanes/bin/gradlew-lane \
   -I scripts/desktop-native-image/prepare.init.gradle \
-  -PnativeExperimentDir=/tmp/r6-native-image -Pmetrolist.sourceRevision= \
+  -PnativeExperimentDir=/tmp/r6-native-image -Pjoymusic.sourceRevision= \
   :desktopApp:prepareNativeImageExperiment :desktopApp:createReleaseDistributable \
   :desktopApp:compileKotlinJvm --no-configuration-cache \
   > /tmp/r6-native-image/prepare.log 2>&1
@@ -214,10 +214,10 @@ python3 scripts/desktop-native-image/run.py trace \
   --media 'https://music.youtube.com/watch?v=IgxYypxZDTQ' \
   > /tmp/r6-native-image/trace-youtube.log 2>&1
 cp /tmp/r6-native-image/agent/reachability-metadata.json \
-  scripts/desktop-native-image/resources/META-INF/native-image/com.metrolist/desktop-experiment/
+  scripts/desktop-native-image/resources/META-INF/native-image/com.joymusic/desktop-experiment/
 ```
 
-Review regenerated metadata before committing it. Build outside the lane's 6 GiB scope. The script takes `/tmp/metrolist-gradle.lock`, then runs the builder in a user scope with `MemoryMax=16G`, `MemorySwapMax=2G` and `CPUWeight=50`. It uses `-J-Xmx12g`, two compiler threads, no JVM fallback and exact reachability metadata. A failed build preserves the previous good image and returns failure. Successful builds publish `/tmp/r6-native-image/image`.
+Review regenerated metadata before committing it. Build outside the lane's 6 GiB scope. The script takes `/tmp/joymusic-gradle.lock`, then runs the builder in a user scope with `MemoryMax=16G`, `MemorySwapMax=2G` and `CPUWeight=50`. It uses `-J-Xmx12g`, two compiler threads, no JVM fallback and exact reachability metadata. A failed build preserves the previous good image and returns failure. Successful builds publish `/tmp/r6-native-image/image`.
 
 ```sh
 bash scripts/desktop-native-image/build.sh \
@@ -231,13 +231,13 @@ The benchmark also holds the shared Gradle lock for the whole comparison. The de
 The release package has a linked runtime without the command-line launcher. Clone that runtime into a new destination for the control and add `java` from the exact JDK version used to create it. This leaves the packaged runtime untouched. On this machine the matching JDK is `/usr/lib/jvm/java-25-temurin`.
 
 ```sh
-cp -a desktopApp/build/compose/binaries/main-release/app/Metrolist/lib/runtime \
+cp -a desktopApp/build/compose/binaries/main-release/app/JoyMusic/lib/runtime \
   /tmp/r6-native-image/jvm-runtime
 mkdir -p /tmp/r6-native-image/jvm-runtime/bin
 cp /usr/lib/jvm/java-25-temurin/bin/java /tmp/r6-native-image/jvm-runtime/bin/java
 python3 scripts/desktop-native-image/benchmark.py \
   --java /tmp/r6-native-image/jvm-runtime/bin/java \
-  --jvm-config desktopApp/build/compose/binaries/main-release/app/Metrolist/lib/app/Metrolist.cfg \
+  --jvm-config desktopApp/build/compose/binaries/main-release/app/JoyMusic/lib/app/JoyMusic.cfg \
   --local-media /tmp/r6-native-image/tone.opus \
   --youtube 'https://music.youtube.com/watch?v=IgxYypxZDTQ' \
   --name comparison-serial \

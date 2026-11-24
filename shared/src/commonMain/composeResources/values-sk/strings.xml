@@ -242,7 +242,7 @@
     <string name="about">Informácie</string>
     <string name="credits_android_lead">Hlavný vývojár pre Android</string>
     <string name="credits_desktop_lead">Hlavný vývojár pre desktop</string>
-    <string name="credits_creator">Tvorca Metrolistu</string>
+    <string name="credits_creator">Tvorca JoyMusicu</string>
     <string name="credits_android_developer">Vývojár pre Android</string>
     <string name="credits_desktop_developer">Vývojár desktopovej verzie</string>
     <string name="credits_macos_developer">Vývojár pre macOS</string>
@@ -257,7 +257,7 @@
     <string name="credits_license_desc">JOY MUSIC je licencovaný pod licenciou GPL-3.0</string>
     <string name="devmode_already_active" translatable="true">Režim vývojára je už aktívny</string>
     <string name="discord_enable_rich_presence">Zapnúť Discord Rich Presence</string>
-    <string name="discord_listen_to_metrolist">Vypočujte si JOY MUSIC</string>
+    <string name="discord_listen_to_joymusic">Vypočujte si JOY MUSIC</string>
     <string name="discord_login_description">Prepojte svoj Discord účet</string>
     <string name="discord_rich_presence">Rich Presence</string>
     <string name="discord_state">Stav</string>
@@ -481,7 +481,7 @@
     <string name="app_font_applied">Používanie %1$s</string>
     <string name="app_font_picker_desc">Vyberte súbor TTF alebo OTF. Aplikácia JOY MUSIC ho skopíruje do svojho súkromného úložiska.</string>
     <string name="android_auto_pinned_playlist_mode">Prehrávanie playlistov</string>
-    <string name="restore_in_progress">Obnovovanie zálohy…\nMetrolist sa automaticky reštartuje.</string>
+    <string name="restore_in_progress">Obnovovanie zálohy…\nJoyMusic sa automaticky reštartuje.</string>
     <string name="privacy_blocklists">Blocklisty</string>
     <string name="appearance_show_home_tab">Zobraziť kartu Domov</string>
     <string name="appearance_show_uploaded_playlist">Zobraziť nahraný playlist</string>
@@ -643,10 +643,10 @@
     <string name="updates_notification_title">JOY MUSIC %1$s je pripravený</string>
     <string name="updates_notification_text">Kliknutím stiahnete a nainštalujete aktualizáciu</string>
     <string name="updates_channel_name">Aktualizácie aplikácie</string>
-    <string name="updates_channel_description">Oznámenia o nových verziách Metrolistu</string>
+    <string name="updates_channel_description">Oznámenia o nových verziách JoyMusicu</string>
     <string name="updates_download_failed">Aktualizáciu sa nepodarilo stiahnuť.</string>
     <string name="updates_release_unavailable">Toto vydanie neobsahuje kompatibilný súbor APK.</string>
-    <string name="updates_release_notes_title">Čo je nové v Metroliste %1$s</string>
+    <string name="updates_release_notes_title">Čo je nové v JoyMusice %1$s</string>
     <string name="device_connect_title">Pripojenie zariadenia</string>
     <string name="device_connect_summary">Spárujte dôveryhodné zariadenia vo svojej lokálnej sieti. Pripojenia sú šifrované.</string>
     <string name="device_connect_beta">Beta</string>
@@ -930,7 +930,7 @@
     <string name="recognition_history_earlier">Skôr</string>
     <string name="no_recognized_songs_hint">Skladby, ktoré rozpoznáte, sa zobrazia tu.</string>
     <string name="recognition_listening_hint">Podržte telefón blízko hudby</string>
-    <string name="play_on_app">Hrať na Metroliste</string>
+    <string name="play_on_app">Hrať na JoyMusice</string>
     <string name="try_again">Skúste to znova</string>
     <string name="playlist_order_original">Poradie playlistu</string>
     <string name="lyrics_share_content_scale">Mierka obsahu: %1$d\u0025</string>

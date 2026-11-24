@@ -82,14 +82,14 @@ jobs:
         run: |
           set -euo pipefail
           remote_dir="$(mktemp -d "$RUNNER_TEMP/aur-remote.XXXXXX")"
-          cp aur/PKGBUILD aur/.SRCINFO aur/metrolist.desktop "$remote_dir/"
+          cp aur/PKGBUILD aur/.SRCINFO aur/joymusic.desktop "$remote_dir/"
           chown -R builder:builder "$remote_dir"
           # shellcheck disable=SC2016
           runuser -u builder -- env GITHUB_WORKSPACE="$GITHUB_WORKSPACE" RUNNER_TEMP="$RUNNER_TEMP" bash -c '
             set -euo pipefail
             cd "$GITHUB_WORKSPACE/aur"
             makepkg --printsrcinfo > "$GITHUB_WORKSPACE/build/aur-local-srcinfo"
-            grep -q "source = metrolist.desktop" "$GITHUB_WORKSPACE/build/aur-local-srcinfo"
+            grep -q "source = joymusic.desktop" "$GITHUB_WORKSPACE/build/aur-local-srcinfo"
             ! grep -q "git+https://" "$GITHUB_WORKSPACE/build/aur-local-srcinfo"
             cd "$1"
             makepkg --printsrcinfo > .SRCINFO.generated

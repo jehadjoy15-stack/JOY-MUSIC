@@ -229,30 +229,30 @@ jobs:
         run: |
           set -euo pipefail
           mv \
-            release-assets/Metrolist-Desktop-Windows.zip \
-            release-assets/Metrolist-Desktop-windows.zip
+            release-assets/JoyMusic-Desktop-Windows.zip \
+            release-assets/JoyMusic-Desktop-windows.zip
           mv \
-            release-assets/Metrolist-Desktop-Windows-arm64.zip \
-            "release-assets/metrolist-desktop-windows-arm64-${APP_VERSION}.zip"
+            release-assets/JoyMusic-Desktop-Windows-arm64.zip \
+            "release-assets/joymusic-desktop-windows-arm64-${APP_VERSION}.zip"
           # Legacy v13 GMS builds only update from this asset name; the app has one variant.
-          cp release-assets/Metrolist.apk release-assets/Metrolist-with-Google-Cast.apk
-          if [[ -f release-assets/Metrolist.ipa ]]; then
+          cp release-assets/JoyMusic.apk release-assets/JoyMusic-with-Google-Cast.apk
+          if [[ -f release-assets/JoyMusic.ipa ]]; then
             python3 scripts/generate_altstore_source.py \
-              "$GITHUB_REPOSITORY" "$APP_VERSION" release-assets/Metrolist.ipa release-assets/metrolist-altstore.json
+              "$GITHUB_REPOSITORY" "$APP_VERSION" release-assets/JoyMusic.ipa release-assets/joymusic-altstore.json
           fi
           expected=(
-            "release-assets/Metrolist.apk"
-            "release-assets/Metrolist-with-Google-Cast.apk"
-            "release-assets/Metrolist-KMP-mapping.txt"
-            "release-assets/Metrolist.ipa"
-            "release-assets/metrolist-altstore.json"
-            "release-assets/Metrolist-Desktop-windows.zip"
-            "release-assets/metrolist-installer-windows-x64-${APP_VERSION}.exe"
-            "release-assets/metrolist-desktop-windows-arm64-${APP_VERSION}.zip"
-            "release-assets/metrolist-desktop-linux-x64-${APP_VERSION}.AppImage"
-            "release-assets/metrolist-desktop-linux-arm64-${APP_VERSION}.AppImage"
-            "release-assets/metrolist-desktop-macos-arm64-${APP_VERSION}.dmg"
-            "release-assets/metrolist-desktop-macos-x64-${APP_VERSION}.dmg"
+            "release-assets/JoyMusic.apk"
+            "release-assets/JoyMusic-with-Google-Cast.apk"
+            "release-assets/JoyMusic-KMP-mapping.txt"
+            "release-assets/JoyMusic.ipa"
+            "release-assets/joymusic-altstore.json"
+            "release-assets/JoyMusic-Desktop-windows.zip"
+            "release-assets/joymusic-installer-windows-x64-${APP_VERSION}.exe"
+            "release-assets/joymusic-desktop-windows-arm64-${APP_VERSION}.zip"
+            "release-assets/joymusic-desktop-linux-x64-${APP_VERSION}.AppImage"
+            "release-assets/joymusic-desktop-linux-arm64-${APP_VERSION}.AppImage"
+            "release-assets/joymusic-desktop-macos-arm64-${APP_VERSION}.dmg"
+            "release-assets/joymusic-desktop-macos-x64-${APP_VERSION}.dmg"
           )
           for file in "${expected[@]}"; do
             test -f "$file" || { echo "Missing release asset: $file" >&2; exit 1; }
@@ -347,9 +347,9 @@ jobs:
             --json tagName,isDraft,isPrerelease,url,publishedAt,body,assets > release.json
           gh release download "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
             --dir distribution-assets --pattern SHA256SUMS \
-            --pattern 'metrolist-installer-windows-*.exe' \
-            --pattern 'metrolist-desktop-linux-*.AppImage' \
-            --pattern 'metrolist-desktop-macos-*.dmg'
+            --pattern 'joymusic-installer-windows-*.exe' \
+            --pattern 'joymusic-desktop-linux-*.AppImage' \
+            --pattern 'joymusic-desktop-macos-*.dmg'
 
       - name: Generate recipes from verified assets
         run: >-

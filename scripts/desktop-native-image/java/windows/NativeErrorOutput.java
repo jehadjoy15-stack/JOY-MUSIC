@@ -1,4 +1,4 @@
-package com.metrolist.desktop.nativeimage;
+package com.joymusic.desktop.nativeimage;
 
 import java.util.List;
 import java.io.FileOutputStream;

@@ -15,8 +15,8 @@ Use X11 or XWayland. Login needs GTK3/WebKitGTK 4.1. Saved credentials need Secr
 3. Mark it executable and run it:
 
 ```sh
-chmod u+x -- ./Metrolist.AppImage
-./Metrolist.AppImage
+chmod u+x -- ./JoyMusic.AppImage
+./JoyMusic.AppImage
 ```
 
 Substitute the downloaded filename. Check playback, sign-in and retained credentials after restart.

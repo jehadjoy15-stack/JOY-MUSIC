@@ -83,7 +83,7 @@ jobs:
 
       - name: Build macOS DMG
         run: |
-          ./gradlew :desktopApp:packageReleaseDmg --no-daemon -Pmetrolist.verifyPackaging=false
+          ./gradlew :desktopApp:packageReleaseDmg --no-daemon -Pjoymusic.verifyPackaging=false
 
       - name: Get Version
         id: get_version
@@ -107,7 +107,7 @@ jobs:
       GRADLE_OPTS: >-
         -Dorg.gradle.jvmargs="-Xmx10g -XX:MaxMetaspaceSize=1g -XX:+UseParallelGC -Dfile.encoding=UTF-8"
       ORG_GRADLE_PROJECT_org.gradle.workers.max: "2"
-      ORG_GRADLE_PROJECT_metrolist.verifyPackaging: "false"
+      ORG_GRADLE_PROJECT_joymusic.verifyPackaging: "false"
 
     steps:
       - name: Checkout repository
@@ -140,7 +140,7 @@ jobs:
 
       - name: Precompile iOS Framework
         run: |
-          ./gradlew :shared:linkDebugFrameworkIosArm64 --no-configuration-cache --stacktrace -Pmetrolist.verifyPackaging=false
+          ./gradlew :shared:linkDebugFrameworkIosArm64 --no-configuration-cache --stacktrace -Pjoymusic.verifyPackaging=false
 
       - name: Build iOS IPA
         run: |

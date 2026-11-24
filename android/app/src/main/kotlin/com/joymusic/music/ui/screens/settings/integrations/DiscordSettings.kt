@@ -453,19 +453,22 @@ fun DiscordSettings(
                 } else {
                     OutlinedButton(
                         onClick = {
-                            isBusy = true
-                            DiscordRpcManager.loginWithWebView(context) { success ->
-                                isBusy = false
-                                if (success) {
-                                    coroutineScope.launch(Dispatchers.IO) {
-                                        val token = DiscordRpcManager.getAccessToken()
-                                        if (token != null) {
-                                            val user = DiscordRpcManager.fetchCurrentUser(token)
-                                            if (user != null) {
-                                                withContext(Dispatchers.Main) {
-                                                    discordUsername = user.username
-                                                    discordName = user.name
-                                                    discordAvatar = user.avatar ?: ""
+                            val activity = findActivity(context)
+                            if (activity != null) {
+                                isBusy = true
+                                DiscordRpcManager.authorize(activity) { success ->
+                                    isBusy = false
+                                    if (success) {
+                                        coroutineScope.launch(Dispatchers.IO) {
+                                            val token = DiscordRpcManager.getAccessToken()
+                                            if (token != null) {
+                                                val user = DiscordRpcManager.fetchCurrentUser(token)
+                                                if (user != null) {
+                                                    withContext(Dispatchers.Main) {
+                                                        discordUsername = user.username
+                                                        discordName = user.name
+                                                        discordAvatar = user.avatar ?: ""
+                                                    }
                                                 }
                                             }
                                         }

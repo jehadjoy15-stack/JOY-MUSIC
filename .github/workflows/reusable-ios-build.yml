@@ -16,7 +16,7 @@ on:
       artifact-name:
         description: Workflow artifact name
         required: false
-        default: Metrolist-iOS-IPA
+        default: JoyMusic-iOS-IPA
         type: string
       build-ipa:
         description: Build the IPA for stable releases
@@ -141,7 +141,7 @@ jobs:
           devices = json.load(sys.stdin)["devices"]
           print(next(device["udid"] for runtime, items in devices.items() if ".iOS-" in runtime for device in items if device["name"].startswith("iPhone")))')
           xcrun simctl bootstatus "$device" -b
-          ./gradlew :shared:iosSimulatorArm64Test --device "$device" -Pmetrolist.sourceRevision=
+          ./gradlew :shared:iosSimulatorArm64Test --device "$device" -Pjoymusic.sourceRevision=
 
       - name: Shut down iOS simulator
         if: always()
@@ -222,14 +222,14 @@ jobs:
       - name: Compile iOS release framework
         env:
           CONFIGURATION: Release
-          ORG_GRADLE_PROJECT_metrolist.verifyPackaging: ${{ inputs.run-verification }}
+          ORG_GRADLE_PROJECT_joymusic.verifyPackaging: ${{ inputs.run-verification }}
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
         run: ./gradlew :shared:linkReleaseFrameworkIosArm64 --no-configuration-cache
 
       - name: Build iOS IPA
         env:
-          ORG_GRADLE_PROJECT_metrolist.verifyPackaging: ${{ inputs.run-verification }}
+          ORG_GRADLE_PROJECT_joymusic.verifyPackaging: ${{ inputs.run-verification }}
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
         run: |
@@ -264,11 +264,11 @@ jobs:
           actual_sha256="$(shasum -a 256 "$cli")"
           [[ "${actual_sha256%% *}" == "$sha256" ]]
           chmod +x "$cli"
-          dsyms="iosApp/build/Metrolist.xcarchive/dSYMs"
+          dsyms="iosApp/build/JoyMusic.xcarchive/dSYMs"
           find "$dsyms" -maxdepth 1 -name '*.dSYM' | grep -q . || { echo "No dSYMs in $dsyms" >&2; exit 1; }
           "$cli" debug-files upload \
-            --org metrolistgroup \
-            --project metrolist-kmp \
+            --org joymusicgroup \
+            --project joymusic-kmp \
             --include-sources \
             --wait \
             "$dsyms"
@@ -278,7 +278,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7 / v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: dist/Metrolist.ipa
+          path: dist/JoyMusic.ipa
           if-no-files-found: error
           retention-days: 4
 
@@ -287,4 +287,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           STAGING_RELEASE_TAG: ${{ inputs.staging-release-tag }}
-        run: gh release upload "$STAGING_RELEASE_TAG" dist/Metrolist.ipa --clobber --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$STAGING_RELEASE_TAG" dist/JoyMusic.ipa --clobber --repo "$GITHUB_REPOSITORY"

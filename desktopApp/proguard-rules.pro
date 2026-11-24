@@ -1,4 +1,4 @@
--keep,includedescriptorclasses class com.metrolist.** { *; }
+-keep,includedescriptorclasses class com.joymusic.** { *; }
 -keep,includedescriptorclasses class dev.nyx.** { *; }
 -keep,includedescriptorclasses class meow.nyx.** { *; }
 

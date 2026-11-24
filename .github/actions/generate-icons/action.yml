@@ -12,10 +12,10 @@ runs:
     - name: Generate installer icons
       shell: bash
       run: |
-        rm -rf "${RUNNER_TEMP}/metrolist-icon-venv"
-        python -m venv "${RUNNER_TEMP}/metrolist-icon-venv"
-        PYTHON="${RUNNER_TEMP}/metrolist-icon-venv/bin/python"
-        [[ -x "$PYTHON" ]] || PYTHON="${RUNNER_TEMP}/metrolist-icon-venv/Scripts/python.exe"
+        rm -rf "${RUNNER_TEMP}/joymusic-icon-venv"
+        python -m venv "${RUNNER_TEMP}/joymusic-icon-venv"
+        PYTHON="${RUNNER_TEMP}/joymusic-icon-venv/bin/python"
+        [[ -x "$PYTHON" ]] || PYTHON="${RUNNER_TEMP}/joymusic-icon-venv/Scripts/python.exe"
         "$PYTHON" -m pip install \
           --disable-pip-version-check --no-deps --no-cache-dir --only-binary=:all: Pillow==13.0.0
         "$PYTHON" scripts/gen_icons.py

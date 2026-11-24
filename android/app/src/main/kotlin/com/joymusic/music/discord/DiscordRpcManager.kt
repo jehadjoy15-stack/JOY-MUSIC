@@ -127,7 +127,14 @@ object DiscordRpcManager {
     private fun createGateway(scope: CoroutineScope): DiscordGateway =
         DiscordGateway(
             appId = appId,
-            tokenProvider = { accessToken ?: "" },
+            tokenProvider = {
+                val tok = accessToken ?: ""
+                if (tok.isNotBlank() && !tok.startsWith("Bearer ") && !tok.startsWith("Bot ")) {
+                    "Bearer $tok"
+                } else {
+                    tok
+                }
+            },
             externalScope = scope,
         )
 
@@ -227,13 +234,13 @@ object DiscordRpcManager {
             scope.launch(Dispatchers.Main) { onComplete(success) }
         }
 
-        if (_ready && _authorized) {
+        if (_ready && _authorized && _lastError.value == null) {
             Timber.tag(TAG).d("authorize: short-circuit — already ready and authorized")
             authorizeInProgress = false
             scope.launch(Dispatchers.Main) { onComplete(true) }
             return
         }
-        if (_authorized) {
+        if (_authorized && _lastError.value == null) {
             Timber.tag(TAG).d("authorize: short-circuit — authorized but not ready, reconnecting")
             authorizeInProgress = false
             reconnectWithToken(accessToken ?: "")

@@ -11,7 +11,7 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
-METADATA = Path(__file__).parent / 'resources/META-INF/native-image/com.metrolist/desktop-experiment'
+METADATA = Path(__file__).parent / 'resources/META-INF/native-image/com.joymusic/desktop-experiment'
 
 
 def host_platform():
@@ -55,7 +55,7 @@ def arguments(graal, work, output, target, experiment=False, agent=None):
         if windows:
             # Match Nucleus's GUI launcher while retaining Native Image's main entry point.
             options += ['-H:NativeLinkerOption=/SUBSYSTEM:WINDOWS', '-H:NativeLinkerOption=/ENTRY:mainCRTStartup']
-    main = 'com.metrolist.desktop.experiment.NativeImageMainKt' if experiment else 'com.metrolist.desktop.nativeimage.NativeDesktopMainKt'
+    main = 'com.joymusic.desktop.experiment.NativeImageMainKt' if experiment else 'com.joymusic.desktop.nativeimage.NativeDesktopMainKt'
     classpath = (work / 'classpath.txt').read_text().strip()
     if not experiment:
         classpath = str(work / 'native-glue') + os.pathsep + classpath
@@ -68,7 +68,7 @@ def build(graal, work, target, experiment=False, agent=None):
     (work / 'native-tmp').mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='image-build.', dir=work) as directory:
         image = Path(directory)
-        name = 'metrolist' if experiment else 'Metrolist'
+        name = 'joymusic' if experiment else 'JoyMusic'
         output = image / (name + ('.exe' if target.startswith('windows') else ''))
         if not experiment:
             glue = work / 'native-glue'
@@ -143,7 +143,7 @@ def main():
     (args.work / 'java-glue.log').unlink(missing_ok=True)
     if sys.platform == 'linux' and not args.inside_scope:
         import fcntl
-        with open('/tmp/metrolist-gradle.lock', 'w') as lock:
+        with open('/tmp/joymusic-gradle.lock', 'w') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             command = ['systemd-run', '--user', '--scope', '--quiet', '-p', 'MemoryMax=16G',
                        '-p', 'MemorySwapMax=2G', '-p', 'CPUWeight=50', sys.executable,

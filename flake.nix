@@ -1,5 +1,5 @@
 {
-  description = "Metrolist desktop release packages";
+  description = "JoyMusic desktop release packages";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/6f06d204d8f2d8761d9da78778745974a3216381";
 
@@ -16,12 +16,12 @@
       packages = forSystems (system:
         let
           pkgs = import nixpkgs { inherit system; };
-          metrolist = pkgs.callPackage ./packaging/nix/package.nix { inherit release; };
-        in { inherit metrolist; default = metrolist; });
+          joymusic = pkgs.callPackage ./packaging/nix/package.nix { inherit release; };
+        in { inherit joymusic; default = joymusic; });
       apps = forSystems (system: {
         default = {
           type = "app";
-          program = "${self.packages.${system}.default}/bin/metrolist";
+          program = "${self.packages.${system}.default}/bin/joymusic";
         };
       });
     };

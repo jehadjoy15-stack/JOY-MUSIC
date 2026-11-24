@@ -235,8 +235,8 @@ esac
 export JOYMUSIC_CDS_CACHE
 
 case "$XDG_STATE_HOME" in
-    /*) JOYMUSIC_LOG_DIR="$XDG_STATE_HOME/metrolist/logs" ;;
-    *) JOYMUSIC_LOG_DIR="$HOME/.local/state/metrolist/logs" ;;
+    /*) JOYMUSIC_LOG_DIR="$XDG_STATE_HOME/joymusic/logs" ;;
+    *) JOYMUSIC_LOG_DIR="$HOME/.local/state/joymusic/logs" ;;
 esac
 JOYMUSIC_JVM_ERROR_FILE="$(printf '%s' "$JOYMUSIC_LOG_DIR" | sed 's/%/%%/g')/hs_err_pid%p.log"
 export JOYMUSIC_JVM_ERROR_FILE
@@ -274,7 +274,7 @@ fun registerWindowsPortableArchive(
                 val manifest =
                     mapOf(
                         "schema" to 1,
-                        "appId" to "com.metrolist.desktop",
+                        "appId" to "com.joymusic.desktop",
                         "version" to manifestVersion,
                         "platform" to "windows",
                         "architecture" to "x86_64",

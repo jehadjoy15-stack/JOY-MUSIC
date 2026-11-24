@@ -10,7 +10,7 @@ Main pushes run the affected platform's unit tests. Shared-only changes run the 
 
 A version-only bump and its release metadata skip automatic platform verification. Before any packaging or staging, the release gate checks the equivalent source revision. It accepts only successful GitHub Actions check runs from the expected main-branch workflows, including the actual verification jobs. Missing, failed, pending and skipped required checks block the release. The gate retries transient API failures twice. Workflow display names do not affect it; renaming a workflow file requires updating the tested `CHECKS` mapping in `.github/scripts/release_verification.py`. See [releasing](releasing.md#reuse-verification) for recovery.
 
-Release callers pass `run-verification: false` only after the gate passes. `-Pmetrolist.verifyPackaging=false` then drops verification-only Gradle dependencies from the task graph. Manual package builds keep all verification.
+Release callers pass `run-verification: false` only after the gate passes. `-Pjoymusic.verifyPackaging=false` then drops verification-only Gradle dependencies from the task graph. Manual package builds keep all verification.
 
 | Work skipped in release packaging | Where it runs |
 | --- | --- |
@@ -46,9 +46,9 @@ Only checksum-verified GraalVM archives are cached by the native workflow. Its G
 
 ## macOS x64 packaging on Apple Silicon
 
-The x64 DMG job defaults to `blacksmith-6vcpu-macos-15`, the same Apple Silicon runner as the arm64 job. Gradle, Kotlin compilation and ProGuard use the runner's native JDK. The job passes `-Pmetrolist.desktop.arch=x86_64` to select x64 SQLite, FFmpeg, JNA, WebView and Skiko natives, and `-Pmetrolist.desktop.javaHome=<x64 JDK>` to select the packaging JDK. Compose's [application `javaHome`](https://kotlinlang.org/docs/multiplatform/compose-native-distribution.html#specifying-jdk-version) supplies jlink, jpackage and the bundled runtime, which run under Rosetta. The build validates the packaging JDK's architecture instead of requiring an x64 Gradle JVM.
+The x64 DMG job defaults to `blacksmith-6vcpu-macos-15`, the same Apple Silicon runner as the arm64 job. Gradle, Kotlin compilation and ProGuard use the runner's native JDK. The job passes `-Pjoymusic.desktop.arch=x86_64` to select x64 SQLite, FFmpeg, JNA, WebView and Skiko natives, and `-Pjoymusic.desktop.javaHome=<x64 JDK>` to select the packaging JDK. Compose's [application `javaHome`](https://kotlinlang.org/docs/multiplatform/compose-native-distribution.html#specifying-jdk-version) supplies jlink, jpackage and the bundled runtime, which run under Rosetta. The build validates the packaging JDK's architecture instead of requiring an x64 Gradle JVM.
 
-Compose filters Skiko natives by the daemon's architecture. For macOS packages built on another architecture, the task that trims release JARs selects Skiko's target libraries and checksums, preserves metadata and prefixes the JAR name with `metrolist-` so Compose packages those natives intact.
+Compose filters Skiko natives by the daemon's architecture. For macOS packages built on another architecture, the task that trims release JARs selects Skiko's target libraries and checksums, preserves metadata and prefixes the JAR name with `joymusic-` so Compose packages those natives intact.
 
 Gradle User Home cache keys include the runner OS, runner architecture and job matrix. The x64 job uses strict matching so it never restores the arm64 job's cache from the same host architecture. Its configuration-cache scope is `desktop-macos-x64`, with persistence disabled.
 

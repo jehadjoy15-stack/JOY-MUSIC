@@ -88,7 +88,10 @@ class DiscordGateway(
         val myId = webSocketIdCounter.incrementAndGet()
         activeWebSocketId = myId
         val openDeferred = CompletableDeferred<Unit>()
-        val request = Request.Builder().url(gatewayUrl).build()
+        val request = Request.Builder()
+            .url(gatewayUrl)
+            .header("User-Agent", DiscordSuperProperties.USER_AGENT)
+            .build()
         val listener = createListener(openDeferred, myId)
         val ws = httpClient.newWebSocket(request, listener)
         webSocket = ws
@@ -438,29 +441,33 @@ class DiscordGateway(
     }
 
     private fun buildIdentifyFrame(token: String): String {
+        val formattedToken = if (token.isNotBlank() && !token.startsWith("Bearer ") && !token.startsWith("Bot ")) {
+            "Bearer $token"
+        } else {
+            token
+        }
         val d = JSONObject()
-        d.put("token", token)
-        d.put("capabilities", 16381)
+        d.put("token", formattedToken)
+        d.put("intents", 0)
         
         val props = JSONObject()
         props.put("os", "Android")
         props.put("browser", "Discord Android")
-        props.put("device", "Kizzy")
+        props.put("device", appId)
         d.put("properties", props)
-        
-        val presence = JSONObject()
-        presence.put("status", "online")
-        presence.put("since", 0)
-        presence.put("activities", JSONArray())
-        presence.put("afk", false)
-        d.put("presence", presence)
+        d.put("compress", false)
 
         return wrapOp(IDENTIFY, d)
     }
 
     private fun buildResumeFrame(sessionId: String, seq: Int, token: String): String {
+        val formattedToken = if (token.isNotBlank() && !token.startsWith("Bearer ") && !token.startsWith("Bot ")) {
+            "Bearer $token"
+        } else {
+            token
+        }
         val d = JSONObject()
-        d.put("token", token)
+        d.put("token", formattedToken)
         d.put("session_id", sessionId)
         d.put("seq", seq)
         return wrapOp(RESUME, d)

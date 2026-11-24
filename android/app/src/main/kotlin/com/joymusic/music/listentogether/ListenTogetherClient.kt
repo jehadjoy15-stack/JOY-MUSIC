@@ -693,7 +693,7 @@ class ListenTogetherClient
                 Request
                     .Builder()
                     .url(getServerUrl())
-                    .header("User-Agent", "com.metrolist.music")
+                    .header("User-Agent", "com.joymusic.music")
                     .build()
 
             webSocket =
@@ -864,7 +864,7 @@ class ListenTogetherClient
                 wakeLock =
                     powerManager?.newWakeLock(
                         PowerManager.PARTIAL_WAKE_LOCK,
-                        "Metrolist:ListenTogether",
+                        "JoyMusic:ListenTogether",
                     )
             }
             // Always release before acquiring so that the timeout is reset on each call.

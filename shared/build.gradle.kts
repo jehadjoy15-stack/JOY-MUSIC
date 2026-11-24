@@ -63,7 +63,7 @@ val javacppPlatform =
         val osName = System.getProperty("os.name").lowercase()
         val osArch =
             providers
-                .gradleProperty("metrolist.desktop.arch")
+                .gradleProperty("joymusic.desktop.arch")
                 .orElse(System.getProperty("os.arch"))
                 .get()
                 .lowercase()
@@ -125,12 +125,12 @@ val windowsArm64FfmpegNatives =
             )
             doFirst {
                 environment(
-                    "METROLIST_FFMPEG_JAVA",
+                    "JOYMUSIC_FFMPEG_JAVA",
                     java
                         .get()
                         .executablePath.asFile.absolutePath,
                 )
-                environment("METROLIST_FFMPEG_CLASSPATH", classpath.asPath)
+                environment("JOYMUSIC_FFMPEG_CLASSPATH", classpath.asPath)
             }
         }
     }
@@ -283,7 +283,7 @@ val verifyIosKuromojiPackaging =
         xcodeProject.set(layout.projectDirectory.file("../iosApp/iosApp.xcodeproj/project.pbxproj"))
     }
 
-val runPackagingVerification = providers.gradleProperty("metrolist.verifyPackaging").map(String::toBooleanStrict).getOrElse(true)
+val runPackagingVerification = providers.gradleProperty("joymusic.verifyPackaging").map(String::toBooleanStrict).getOrElse(true)
 tasks.matching { it.name.startsWith("compileKotlinIos") }.configureEach {
     if (runPackagingVerification) dependsOn(verifyIosKuromojiPackaging)
 }
@@ -302,11 +302,11 @@ abstract class GenerateRoomMigrationTestSchemas : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        val output = outputDirectory.file("com/metrolist/shared/db/HistoricalRoomSchemas.kt").get().asFile
+        val output = outputDirectory.file("com/joymusic/shared/db/HistoricalRoomSchemas.kt").get().asFile
         output.parentFile.mkdirs()
         output.writeText(
             buildString {
-                appendLine("package com.metrolist.shared.db")
+                appendLine("package com.joymusic.shared.db")
                 appendLine("import kotlin.io.encoding.Base64")
                 appendLine("internal fun historicalRoomSchema(version: Int): String = when (version) {")
                 schemaDirectory
@@ -329,7 +329,7 @@ abstract class GenerateRoomMigrationTestSchemas : DefaultTask() {
 
 val generateRoomMigrationTestSchemas =
     tasks.register<GenerateRoomMigrationTestSchemas>("generateRoomMigrationTestSchemas") {
-        schemaDirectory.set(layout.projectDirectory.dir("schemas/com.metrolist.shared.db.MusicDatabase"))
+        schemaDirectory.set(layout.projectDirectory.dir("schemas/com.joymusic.shared.db.MusicDatabase"))
         outputDirectory.set(layout.buildDirectory.dir("generated/source/roomMigrationTest/kotlin"))
     }
 
@@ -343,11 +343,11 @@ abstract class GenerateOpusTestFixture : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        val destination = outputDirectory.file("com/metrolist/shared/playback/opus/OpusTestFixture.kt").get().asFile
+        val destination = outputDirectory.file("com/joymusic/shared/playback/opus/OpusTestFixture.kt").get().asFile
         destination.parentFile.mkdirs()
         val encoded = Base64.getEncoder().encodeToString(fixture.get().asFile.readBytes())
         destination.writeText(
-            "package com.metrolist.shared.playback.opus\n" +
+            "package com.joymusic.shared.playback.opus\n" +
                 "import kotlin.io.encoding.Base64\n" +
                 "internal fun opusWebmFixture(): ByteArray = Base64.decode(\"$encoded\")\n",
         )
@@ -388,7 +388,7 @@ val bundledLanguageTags =
 
 kotlin {
     android {
-        namespace = "com.metrolist.shared"
+        namespace = "com.joymusic.shared"
         compileSdk {
             version = release(37) { minorApiLevel = 1 }
         }
@@ -593,7 +593,7 @@ val reflectionFreeTestSuites =
 
 tasks.named<Test>("desktopTest") {
     filter { reflectionFreeTestSuites.forEach(::excludeTestsMatching) }
-    systemProperty("metrolist.test.withoutReflection", "true")
+    systemProperty("joymusic.test.withoutReflection", "true")
     systemProperty("io.ktor.development", "true")
     environment(
         "XDG_DATA_HOME",
@@ -615,7 +615,7 @@ val prepareComposeResourceAliases =
     }
 
 compose.resources {
-    packageOfResClass = "com.metrolist.shared.generated.resources"
+    packageOfResClass = "com.joymusic.shared.generated.resources"
     publicResClass = true
     customDirectory("commonMain", layout.dir(prepareComposeResourceAliases.map { it.destinationDir }))
 }
@@ -665,9 +665,9 @@ val generateBuildConfig =
                     (name.contains("package", ignoreCase = true) && !name.contains("Debug", ignoreCase = true)) ||
                     name.contains("Distributable", ignoreCase = true)
             }
-        val metrolistDebugProp =
+        val joymusicDebugProp =
             providers
-                .gradleProperty("metrolist.debug")
+                .gradleProperty("joymusic.debug")
                 .orNull
                 ?.toBooleanStrictOrNull()
         val xcodeDebug =
@@ -675,7 +675,7 @@ val generateBuildConfig =
                 .environmentVariable("CONFIGURATION")
                 .orNull
                 ?.let { !it.equals("Release", ignoreCase = true) }
-        val debugValue: Boolean = metrolistDebugProp ?: xcodeDebug ?: !isReleaseTask
+        val debugValue: Boolean = joymusicDebugProp ?: xcodeDebug ?: !isReleaseTask
         val lyprioBaseUrl =
             providers
                 .gradleProperty("LYPRIO_BASE_URL")
@@ -719,7 +719,7 @@ val generateBuildConfig =
         inputs.property("lyprioHmacKey", lyprioHmacKey)
         val sourceRevision =
             providers
-                .gradleProperty("metrolist.sourceRevision")
+                .gradleProperty("joymusic.sourceRevision")
                 .orElse(providers.environmentVariable("GITHUB_SHA"))
                 .map(String::trim)
                 .filter { it.matches(Regex("[0-9a-fA-F]{40}")) }
@@ -735,11 +735,11 @@ val generateBuildConfig =
         outputs.cacheIf { false }
 
         doLast {
-            val configFile = outputDir.resolve("com/metrolist/shared/BuildConfig.kt")
+            val configFile = outputDir.resolve("com/joymusic/shared/BuildConfig.kt")
             configFile.parentFile.mkdirs()
             configFile.writeText(
                 """
-                package com.metrolist.shared
+                package com.joymusic.shared
 
                 import kotlin.experimental.ExperimentalObjCRefinement
                 import kotlin.native.HiddenFromObjC
@@ -1082,7 +1082,7 @@ val testServerWithoutReflection =
                 .get()
                 .asFile.absolutePath,
         )
-        systemProperty("metrolist.test.withoutReflection", "true")
+        systemProperty("joymusic.test.withoutReflection", "true")
         systemProperty("io.ktor.development", "true")
         filter {
             reflectionFreeTestSuites.forEach(::includeTestsMatching)

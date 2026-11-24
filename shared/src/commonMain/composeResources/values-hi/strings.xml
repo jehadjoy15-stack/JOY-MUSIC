@@ -255,7 +255,7 @@
     <string name="credits_license_desc">JOY MUSIC पर GPL-3.0 लाइसेंस लागू है</string>
     <string name="devmode_already_active" translatable="true">Devmode पहले से ही सक्रिय है</string>
     <string name="discord_enable_rich_presence">Discord Rich Presence सक्षम करें</string>
-    <string name="discord_listen_to_metrolist">JOY MUSIC सुनें</string>
+    <string name="discord_listen_to_joymusic">JOY MUSIC सुनें</string>
     <string name="discord_login_description">अपना Discord अकाउंट कनेक्ट करें</string>
     <string name="discord_rich_presence">Rich presence</string>
     <string name="discord_state">स्थिति</string>
@@ -265,7 +265,7 @@
     <string name="discord_status_not_initialized">प्रारंभ नहीं हुआ</string>
     <string name="discord_status_authorized">अधिकृत</string>
     <string name="discord_error_denied">Discord द्वारा अनुमति अस्वीकृत की गई।</string>
-    <string name="discord_error_connection_failed">Discord से कनेक्ट नहीं हो पाया। MetroList स्वतः पुनः प्रयास करेगा।</string>
+    <string name="discord_error_connection_failed">Discord से कनेक्ट नहीं हो पाया। JoyMusic स्वतः पुनः प्रयास करेगा।</string>
     <string name="discord_error_no_browser">Discord अनुमति खोलने के लिए कोई ऐप उपलब्ध नहीं है।</string>
     <string name="discord_error_token_exchange_failed">टोकन विनिमय विफल हो गया। कृपया पुनः प्रयास करें।</string>
     <string name="discord_error_token_refresh_failed">टोकन रीफ्रेशन विफल हो गया। कृपया पुनः लॉग इन करें।</string>
@@ -472,7 +472,7 @@
     <string name="backup_restore_busy">काम चल रहा है…</string>
     <string name="backup_sensitive_title">संवेदनशील बैकअप</string>
     <string name="backup_sensitive_message">बैकअप में आपके API keys, अकाउंट क्रेडेंशियल, ऑथेंटिकेशन कुकीज़, सेशन टोकन और अन्य संवेदनशील जानकारी होती है। इस फ़ाइल के पास वाला कोई भी व्यक्ति आपके अकाउंट्स तक पहुँच सकता है। इसे सुरक्षित रूप से रखें और कभी साझा न करें।</string>
-    <string name="restore_in_progress">आपका बैकअप पुनर्स्थापित किया जा रहा है…\nMetrolist स्वतः रीस्टार्ट हो जाएगा।</string>
+    <string name="restore_in_progress">आपका बैकअप पुनर्स्थापित किया जा रहा है…\nJoyMusic स्वतः रीस्टार्ट हो जाएगा।</string>
     <string name="scrobble_tap_to_disconnect">डिसकनेक्ट करने के लिए टैप करें</string>
     <string name="scrobble_enable">स्क्रॉबलिंग सक्षम करें</string>
     <string name="scrobble_now_playing">अभी चल रहा है अपडेट</string>

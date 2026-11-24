@@ -1,7 +1,7 @@
-package com.metrolist.desktop.nativeimage
+package com.joymusic.desktop.nativeimage
 
-import com.metrolist.desktop.window.jna.User32Extend
-import com.metrolist.desktop.window.jna.structure.MENUITEMINFO
+import com.joymusic.desktop.window.jna.User32Extend
+import com.joymusic.desktop.window.jna.structure.MENUITEMINFO
 import com.sun.jna.Pointer
 import com.sun.jna.platform.win32.COM.COMUtils
 import com.sun.jna.platform.win32.Ole32

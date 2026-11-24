@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.9.0.schema.json
+PackageIdentifier: JoyMusicTeam.JoyMusic
+PackageVersion: '@VERSION@'
+PackageLocale: en-US
+Publisher: JoyMusicTeam
+PublisherUrl: https://github.com/JoyMusicTeam
+PublisherSupportUrl: https://github.com/jehadjoy15-stack/JOY-MUSIC/issues
+PackageName: JoyMusic Desktop
+PackageUrl: https://github.com/jehadjoy15-stack/JOY-MUSIC
+License: GPL-3.0
+LicenseUrl: https://github.com/jehadjoy15-stack/JOY-MUSIC/blob/v@VERSION@/LICENSE
+ShortDescription: YouTube Music desktop client
+ReleaseNotesUrl: https://github.com/jehadjoy15-stack/JOY-MUSIC/releases/tag/v@VERSION@
+ManifestType: defaultLocale
+ManifestVersion: 1.9.0

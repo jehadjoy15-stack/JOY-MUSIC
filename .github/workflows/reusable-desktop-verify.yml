@@ -123,7 +123,7 @@ jobs:
             if [[ '${{ inputs.shared-only }}' != 'true' ]]; then
               tasks+=(:desktopApp:jvmTest :desktopApp:ktlintCheck)
             fi
-            ./gradlew "${tasks[@]}" --no-daemon -Pmetrolist.sourceRevision=
+            ./gradlew "${tasks[@]}" --no-daemon -Pjoymusic.sourceRevision=
           else
-            ./gradlew :desktopApp:assemble --no-daemon -Pmetrolist.sourceRevision=
+            ./gradlew :desktopApp:assemble --no-daemon -Pjoymusic.sourceRevision=
           fi

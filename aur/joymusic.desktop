@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=JoyMusic
+Comment=YouTube Music desktop client
+Exec=joymusic %u
+Icon=joymusic
+Terminal=false
+Categories=AudioVideo;Player;
+MimeType=x-scheme-handler/joymusic;x-scheme-handler/joymusic-auth;

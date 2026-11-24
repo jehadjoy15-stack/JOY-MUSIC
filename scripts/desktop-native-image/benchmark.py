@@ -41,7 +41,7 @@ def main():
             shutil.rmtree(profile)
         label = f"{args.name}-{len(results) + 1:02d}-{runtime}-{workload}-{cache}"
         command = ["systemd-run", "--user", "--scope", "--quiet",
-                   f"--unit=metrolist-r6-measure-{os.getpid()}-{len(results) + 1}",
+                   f"--unit=joymusic-r6-measure-{os.getpid()}-{len(results) + 1}",
                    "-p", "MemoryMax=2G", "-p", "MemorySwapMax=0", "-p", "CPUWeight=50",
                    sys.executable, str(runner), runtime, "--work", str(work), "--name", label,
                    "--profile", profile_name, "--seconds", "40" if workload == "idle" else "75"]
@@ -60,7 +60,7 @@ def main():
         print(label, "exit", completed.returncode, flush=True)
 
     # Exclude lane builds from the comparison, just as the native builder does.
-    with open("/tmp/metrolist-gradle.lock", "w") as gradle_lock:
+    with open("/tmp/joymusic-gradle.lock", "w") as gradle_lock:
         fcntl.flock(gradle_lock, fcntl.LOCK_EX)
         for order in (("native", "jvm"), ("jvm", "native")):
             for runtime in order:

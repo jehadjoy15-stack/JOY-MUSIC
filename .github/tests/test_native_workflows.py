@@ -43,7 +43,7 @@ class NativeWorkflowTest(unittest.TestCase):
     def test_native_caches_exclude_application_outputs_and_credentials(self):
         text=(ROOT/'.github/workflows/reusable-desktop-native.yml').read_text()
         cache=text.split('      - name: Cache verified GraalVM archives\n',1)[1].split('      - name:',1)[0]
-        self.assertIn('metrolist-graalvm/archives',cache)
+        self.assertIn('joymusic-graalvm/archives',cache)
         self.assertIn('scripts/graalvm-pins.json',cache)
         self.assertIn('toolchain.py',cache)
         self.assertNotIn('restore-keys:',cache)

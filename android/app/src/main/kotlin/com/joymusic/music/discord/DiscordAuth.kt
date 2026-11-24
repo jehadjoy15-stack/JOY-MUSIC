@@ -196,7 +196,7 @@ class DiscordAuth(
         challenge: String,
     ): String {
         val encodedRedirect = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8.name())
-        val encodedScope = URLEncoder.encode("identify email connections guilds communities.memberships.read activities.read activities.write messages.read rpc rpc.notifications.read rpc.voice.read rpc.voice.write rpc.video.read rpc.video.write rpc.screenshare.read rpc.screenshare.write", StandardCharsets.UTF_8.name())
+        val encodedScope = URLEncoder.encode(DISCORD_SCOPES, StandardCharsets.UTF_8.name())
         return buildString {
             append(DISCORD_OAUTH_AUTHORIZE)
             append("?client_id=").append(clientId)
@@ -211,7 +211,7 @@ class DiscordAuth(
 
     companion object {
         private const val TAG = "DiscordSvc"
-        const val REDIRECT_URI = "joymusicdiscord://oauth2/callback"
+        const val REDIRECT_URI = "joymusic-auth://discord/callback"
 
         private fun defaultClient(): HttpClient = HttpClient(CIO) {
             install(HttpTimeout) {

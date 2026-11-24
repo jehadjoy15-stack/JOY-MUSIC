@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=JoyMusic
+Comment=Stream and manage your YouTube Music library
+Exec=com.joymusic.desktop %u
+Icon=com.joymusic.desktop
+Terminal=false
+Categories=AudioVideo;Player;Music;
+StartupWMClass=JoyMusic
+Keywords=music;player;youtube;streaming;
+MimeType=x-scheme-handler/joymusic;x-scheme-handler/joymusic-auth;

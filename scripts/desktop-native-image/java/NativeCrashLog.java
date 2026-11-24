@@ -1,6 +1,6 @@
-package com.metrolist.desktop.nativeimage;
+package com.joymusic.desktop.nativeimage;
 
-import com.metrolist.shared.utils.XdgUtils;
+import com.joymusic.shared.utils.XdgUtils;
 import com.oracle.svm.core.annotate.Substitute;
 import com.oracle.svm.core.annotate.TargetClass;
 import java.io.File;
@@ -11,7 +11,7 @@ final class NativeCrashLog {
     static void configure() {
         if (configured) return;
         try {
-            File directory = new File(XdgUtils.INSTANCE.getXdgStateHome(), "metrolist/logs");
+            File directory = new File(XdgUtils.INSTANCE.getXdgStateHome(), "joymusic/logs");
             if (!directory.isDirectory() && !directory.mkdirs()) {
                 throw new IllegalStateException("Cannot create native crash log directory: " + directory);
             }
@@ -25,7 +25,7 @@ final class NativeCrashLog {
 }
 
 // Native Image has no HotSpot ErrorFile option and does not consume _JAVA_OPTIONS.
-@TargetClass(className = "com.metrolist.desktop.utils.DesktopJvmErrorFileKt")
+@TargetClass(className = "com.joymusic.desktop.utils.DesktopJvmErrorFileKt")
 final class TargetDesktopJvmErrorFile {
     @Substitute
     public static void configureDesktopJvmErrorFile() {

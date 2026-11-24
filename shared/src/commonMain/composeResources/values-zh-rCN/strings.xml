@@ -227,7 +227,7 @@
     <string name="credits_license_name">许可</string>
     <string name="credits_license_desc">JOY MUSIC 采用 GPL-3.0 许可证授权。</string>
     <string name="devmode_already_active" translatable="true">开发模式已激活</string>
-    <string name="discord_listen_to_metrolist">收听 JOY MUSIC</string>
+    <string name="discord_listen_to_joymusic">收听 JOY MUSIC</string>
     <string name="discord_login_description">连接您的 Discord 账号</string>
     <string name="discord_button1_text_default">在 YouTube Music 上收听</string>
     <string name="discord_button2_text_default">访问 JOY MUSIC</string>

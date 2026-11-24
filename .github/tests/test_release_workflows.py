@@ -85,36 +85,36 @@ class ReleaseWorkflowsTest(unittest.TestCase):
     def test_stable_release_requires_and_checksums_ipa(self):
         script = step_script('release.yml', 'Validate and checksum release assets')
         assets = [
-            'Metrolist.apk',
-            'Metrolist-KMP-mapping.txt',
-            'Metrolist-Desktop-Windows.zip',
-            'Metrolist-Desktop-Windows-arm64.zip',
-            'metrolist-installer-windows-x64-14.0.0.exe',
-            'metrolist-desktop-linux-x64-14.0.0.AppImage',
-            'metrolist-desktop-linux-arm64-14.0.0.AppImage',
-            'metrolist-desktop-macos-arm64-14.0.0.dmg',
-            'metrolist-desktop-macos-x64-14.0.0.dmg',
+            'JoyMusic.apk',
+            'JoyMusic-KMP-mapping.txt',
+            'JoyMusic-Desktop-Windows.zip',
+            'JoyMusic-Desktop-Windows-arm64.zip',
+            'joymusic-installer-windows-x64-14.0.0.exe',
+            'joymusic-desktop-linux-x64-14.0.0.AppImage',
+            'joymusic-desktop-linux-arm64-14.0.0.AppImage',
+            'joymusic-desktop-macos-arm64-14.0.0.dmg',
+            'joymusic-desktop-macos-x64-14.0.0.dmg',
         ]
         for include_ipa in (False, True):
             with self.subTest(include_ipa=include_ipa), tempfile.TemporaryDirectory() as directory:
                 output = Path(directory) / 'release-assets'
                 output.mkdir()
                 (Path(directory) / 'scripts').symlink_to(ROOT / 'scripts')
-                for name in assets + (['Metrolist.ipa'] if include_ipa else []):
+                for name in assets + (['JoyMusic.ipa'] if include_ipa else []):
                     (output / name).write_bytes(b'package')
                 result = subprocess.run(
                     ['bash', '-c', script], cwd=directory,
-                    env={**os.environ, 'APP_VERSION': '14.0.0', 'GITHUB_REPOSITORY': 'MetrolistGroup/Metrolist'},
+                    env={**os.environ, 'APP_VERSION': '14.0.0', 'GITHUB_REPOSITORY': 'jehadjoy15-stack/JOY-MUSIC'},
                     capture_output=True, text=True,
                 )
                 self.assertEqual(result.returncode == 0, include_ipa, result.stderr)
                 if include_ipa:
                     sums = (output / 'SHA256SUMS').read_text()
-                    self.assertIn('Metrolist.ipa', sums)
-                    self.assertIn('Metrolist-with-Google-Cast.apk', sums)
-                    self.assertIn('metrolist-altstore.json', sums)
+                    self.assertIn('JoyMusic.ipa', sums)
+                    self.assertIn('JoyMusic-with-Google-Cast.apk', sums)
+                    self.assertIn('joymusic-altstore.json', sums)
                 else:
-                    self.assertIn('Missing release asset: release-assets/Metrolist.ipa', result.stderr)
+                    self.assertIn('Missing release asset: release-assets/JoyMusic.ipa', result.stderr)
 
 if __name__ == '__main__':
     unittest.main()

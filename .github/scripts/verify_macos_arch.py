@@ -30,7 +30,7 @@ def has_x64_counterpart(name, names):
 
 
 def verify_app(app, architecture):
-    launcher = app / 'Contents/MacOS/Metrolist'
+    launcher = app / 'Contents/MacOS/JoyMusic'
     if not launcher.is_file():
         raise ValueError(f'Missing launcher: {launcher}')
     app_directory = app / 'Contents/app'
@@ -50,7 +50,7 @@ def verify_app(app, architecture):
     for path in [launcher, *libraries]:
         verify_binary(path, architecture, path.relative_to(app))
     # Check natives stored in JARs as well as the loose libraries above.
-    with tempfile.TemporaryDirectory(prefix='metrolist-macos-natives-') as directory:
+    with tempfile.TemporaryDirectory(prefix='joymusic-macos-natives-') as directory:
         for jar in sorted(app.rglob('*.jar')):
             with zipfile.ZipFile(jar) as archive:
                 natives = [entry for entry in archive.infolist()

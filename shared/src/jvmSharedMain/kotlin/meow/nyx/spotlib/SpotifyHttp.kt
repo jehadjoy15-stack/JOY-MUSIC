@@ -1,7 +1,7 @@
 package meow.nyx.spotlib
 
-import com.metrolist.shared.network.HttpFailureLog
-import com.metrolist.shared.network.sharedHttpEngine
+import com.joymusic.shared.network.HttpFailureLog
+import com.joymusic.shared.network.sharedHttpEngine
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

@@ -6,7 +6,7 @@ Coordinate schema changes upstream. Do not modify `metroproto` here. Keep these 
 
 1. `.proto` definitions in `metroproto/`.
 2. JVM generation in `listenTogetherProto`.
-3. Shared models and validation in `shared/src/commonMain/kotlin/com/metrolist/shared/listentogether/network/Protocol.kt`.
+3. Shared models and validation in `shared/src/commonMain/kotlin/com/joymusic/shared/listentogether/network/Protocol.kt`.
 4. JVM `MessageCodec.kt` and common `PortableMessageCodec.kt`.
 
 Import shared network models rather than generated JVM types. Native targets use the hand-written portable codec. It rejects more than 16,384 fields per protobuf object. Room-entry state must have matching room identifiers.
@@ -53,13 +53,13 @@ Settings and server management require the switch but not a username. Creating o
 
 ## Invitation links
 
-Room invitations use `https://metrolist.cc/listen?code=<code>` or `https://metrolist.cc/party?r=<code>`. Media share and copy actions use `https://music.youtube.com` through `ShareUrls`. Loopback and Workers preview hosts do not open media or room invitations.
+Room invitations use `https://joymusic.cc/listen?code=<code>` or `https://joymusic.cc/party?r=<code>`. Media share and copy actions use `https://music.youtube.com` through `ShareUrls`. Loopback and Workers preview hosts do not open media or room invitations.
 
-Android and iOS validate eight-character room codes in HTTPS invitations and `metrolist://listen-together/<code>`. Android also accepts shared text. Active-room changes require confirmation; dismissing keeps the current room. Invitations prefill the join form.
+Android and iOS validate eight-character room codes in HTTPS invitations and `joymusic://listen-together/<code>`. Android also accepts shared text. Active-room changes require confirmation; dismissing keeps the current room. Invitations prefill the join form.
 
-Packaged Windows launches register `metrolist://` per user and forward URLs to an existing instance. Both `metrolist://listen?code=ABCDEFGH` and `metrolist://listen-together/ABCDEFGH` reach the invitation handler. Development runs do not register. Relaunch after moving a portable directory to update its path. Installer registration and uninstall cleanup need companion MetrolistManager support.
+Packaged Windows launches register `joymusic://` per user and forward URLs to an existing instance. Both `joymusic://listen?code=ABCDEFGH` and `joymusic://listen-together/ABCDEFGH` reach the invitation handler. Development runs do not register. Relaunch after moving a portable directory to update its path. Installer registration and uninstall cleanup need companion JoyMusicManager support.
 
-HTTPS handoff requires a website link to the custom scheme. iOS entitlements request `applinks:metrolist.cc`; delivery also requires the domain's Apple App Site Association document and a matching signing-team application identifier/provisioning profile. Independently re-signed IPAs are not automatically covered. Test cold and running-app delivery on native platforms.
+HTTPS handoff requires a website link to the custom scheme. iOS entitlements request `applinks:joymusic.cc`; delivery also requires the domain's Apple App Site Association document and a matching signing-team application identifier/provisioning profile. Independently re-signed IPAs are not automatically covered. Test cold and running-app delivery on native platforms.
 
 ## Verification
 

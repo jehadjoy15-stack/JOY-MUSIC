@@ -1,6 +1,6 @@
 /build/
 /src/
 /pkg/
-/metrolist/
-/metrolist-kmp/
+/joymusic/
+/joymusic-kmp/
 /*.pkg.tar.zst

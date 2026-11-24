@@ -1,16 +1,16 @@
-package com.metrolist.desktop.experiment
+package com.joymusic.desktop.experiment
 
-import com.metrolist.desktop.state.playback.PlayerState
-import com.metrolist.desktop.utils.DesktopUrlHandler
-import com.metrolist.shared.model.SongItem
+import com.joymusic.desktop.state.playback.PlayerState
+import com.joymusic.desktop.utils.DesktopUrlHandler
+import com.joymusic.shared.model.SongItem
 import java.io.File
 import kotlin.concurrent.thread
-import com.metrolist.desktop.main as desktopMain
+import com.joymusic.desktop.main as desktopMain
 
 fun main(args: Array<String>) {
-    val media = System.getProperty("metrolist.experiment.media")
+    val media = System.getProperty("joymusic.experiment.media")
     if (media != null) {
-        val trigger = File(requireNotNull(System.getProperty("metrolist.experiment.trigger")))
+        val trigger = File(requireNotNull(System.getProperty("joymusic.experiment.trigger")))
         thread(name = "native-image-playback-probe", isDaemon = true) {
             try {
                 while (!trigger.isFile) Thread.sleep(50)

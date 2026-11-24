@@ -61,7 +61,7 @@ assert.equal(createHash("sha256").update(bootstrap).digest("hex"), "3a2f75400ef6
 const boundsSandbox = vm.createContext({});
 vm.runInContext(bootstrap, boundsSandbox);
 assert.throws(() => dictionaryFiles.forEach(([name, , maxBytes]) => {
-    boundsSandbox.__metrolistAddDictionary(name, "AAAA".repeat(Math.floor(maxBytes / 3)));
+    boundsSandbox.__joymusicAddDictionary(name, "AAAA".repeat(Math.floor(maxBytes / 3)));
 }), /size limit/);
 
 const sandbox = vm.createContext({});
@@ -70,13 +70,13 @@ assert.equal("window" in sandbox, false);
 assert.equal("document" in sandbox, false);
 vm.runInContext(bootstrap, sandbox);
 vm.runInContext(engine, sandbox);
-assert.throws(() => sandbox.__metrolistAddDictionary("../base.dat.gz", "AAAA"), /Unrecognized/);
-assert.throws(() => sandbox.__metrolistAddDictionary("toString", "AAAA"), /Unrecognized/);
-assert.throws(() => sandbox.__metrolistAddDictionary("base.dat.gz", ""), /Invalid or oversized/);
-assert.throws(() => sandbox.__metrolistAddDictionary("base.dat.gz", "A".repeat(5_333_340)), /Invalid or oversized/);
+assert.throws(() => sandbox.__joymusicAddDictionary("../base.dat.gz", "AAAA"), /Unrecognized/);
+assert.throws(() => sandbox.__joymusicAddDictionary("toString", "AAAA"), /Unrecognized/);
+assert.throws(() => sandbox.__joymusicAddDictionary("base.dat.gz", ""), /Invalid or oversized/);
+assert.throws(() => sandbox.__joymusicAddDictionary("base.dat.gz", "A".repeat(5_333_340)), /Invalid or oversized/);
 let missingResourceError;
 const missingRequest = new sandbox.XMLHttpRequest();
-missingRequest.open("GET", "metrolist-dictionary/base.dat.gz", true);
+missingRequest.open("GET", "joymusic-dictionary/base.dat.gz", true);
 missingRequest.responseType = "arraybuffer";
 missingRequest.onerror = error => { missingResourceError = error; };
 missingRequest.send();
@@ -89,14 +89,14 @@ externalRequest.onerror = error => { externalRequestError = error; };
 externalRequest.send();
 assert.ok(externalRequestError);
 
-for (const [name, bytes] of dictionary) sandbox.__metrolistAddDictionary(name, bytes.toString("base64"));
-sandbox.__metrolistStartBuild();
-sandbox.__metrolistDrainTimers();
-assert.equal(sandbox.__metrolistBuildError(), null);
-assert.equal(sandbox.__metrolistIsBuilt(), true);
+for (const [name, bytes] of dictionary) sandbox.__joymusicAddDictionary(name, bytes.toString("base64"));
+sandbox.__joymusicStartBuild();
+sandbox.__joymusicDrainTimers();
+assert.equal(sandbox.__joymusicBuildError(), null);
+assert.equal(sandbox.__joymusicIsBuilt(), true);
 
 function readings(text) {
-    return JSON.parse(sandbox.__metrolistTokenize(text)).map(([surface, pronunciation, reading]) => [
+    return JSON.parse(sandbox.__joymusicTokenize(text)).map(([surface, pronunciation, reading]) => [
         surface,
         pronunciation && pronunciation !== "*" ? pronunciation : reading,
     ]);
@@ -107,11 +107,11 @@ assert.deepEqual(readings("日本語"), [["日本語", "ニホンゴ"]]);
 assert.deepEqual(readings("今日は東京です"), [["今日", "キョー"], ["は", "ワ"], ["東京", "トーキョー"], ["です", "デス"]]);
 assert.deepEqual(readings("東京かな"), [["東京", "トーキョー"], ["か", "カ"], ["な", "ナ"]]);
 assert.deepEqual(readings("かなカタカナ"), [["かな", "カナ"], ["カタカナ", "カタカナ"]]);
-sandbox.__metrolistReleaseDictionaryData();
+sandbox.__joymusicReleaseDictionaryData();
 assert.deepEqual(readings("東京"), [["東京", "トーキョー"]]);
 let releasedDataError;
 const releasedRequest = new sandbox.XMLHttpRequest();
-releasedRequest.open("GET", "metrolist-dictionary/base.dat.gz", true);
+releasedRequest.open("GET", "joymusic-dictionary/base.dat.gz", true);
 releasedRequest.responseType = "arraybuffer";
 releasedRequest.onerror = error => { releasedDataError = error; };
 releasedRequest.send();

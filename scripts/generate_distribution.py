@@ -14,17 +14,17 @@ from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = "MetrolistGroup/Metrolist"
-APP_ID = "com.metrolist.desktop"
+REPOSITORY = "jehadjoy15-stack/JOY-MUSIC"
+APP_ID = "com.joymusic.desktop"
 
 
 def release_assets(version):
     return {
-        "WINDOWS": f"metrolist-installer-windows-x64-{version}.exe",
-        "MACOS_ARM64": f"metrolist-desktop-macos-arm64-{version}.dmg",
-        "MACOS_X64": f"metrolist-desktop-macos-x64-{version}.dmg",
-        "LINUX_X64": f"metrolist-desktop-linux-x64-{version}.AppImage",
-        "LINUX_ARM64": f"metrolist-desktop-linux-arm64-{version}.AppImage",
+        "WINDOWS": f"joymusic-installer-windows-x64-{version}.exe",
+        "MACOS_ARM64": f"joymusic-desktop-macos-arm64-{version}.dmg",
+        "MACOS_X64": f"joymusic-desktop-macos-x64-{version}.dmg",
+        "LINUX_X64": f"joymusic-desktop-linux-x64-{version}.AppImage",
+        "LINUX_ARM64": f"joymusic-desktop-linux-arm64-{version}.AppImage",
     }
 
 
@@ -116,13 +116,13 @@ def generate(assets_dir, metadata, output, screenshots):
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=output.parent) as temporary:
         stage = Path(temporary) / "distribution"
-        winget = stage / "winget/manifests/m/MetrolistGroup/Metrolist" / version
+        winget = stage / "winget/manifests/m/jehadjoy15-stack/JOY-MUSIC" / version
         winget.mkdir(parents=True)
         for source in sorted((ROOT / "packaging/winget").glob("*.yaml.in")):
             (winget / source.name.removesuffix(".in")).write_text(render(source, substitutions))
-        cask = stage / "homebrew/Casks/metrolist.rb"
+        cask = stage / "homebrew/Casks/joymusic.rb"
         cask.parent.mkdir(parents=True)
-        cask.write_text(render(ROOT / "packaging/homebrew/metrolist.rb.in", substitutions))
+        cask.write_text(render(ROOT / "packaging/homebrew/joymusic.rb.in", substitutions))
         flatpak = stage / "flatpak"
         flatpak.mkdir()
         (flatpak / f"{APP_ID}.json").write_text(render(ROOT / f"packaging/flatpak/{APP_ID}.json.in", substitutions))

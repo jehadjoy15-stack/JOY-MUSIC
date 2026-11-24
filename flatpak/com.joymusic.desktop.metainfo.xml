@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.joymusic.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>JoyMusic</name>
+  <summary>Stream and manage your YouTube Music library</summary>
+
+  <description>
+    <p>
+      JoyMusic is a YouTube Music client for Linux. Browse, search and play
+      your YouTube Music library, manage playlists and play music in the
+      background.
+    </p>
+    <ul>
+      <li>Browse and search your YouTube Music library</li>
+      <li>Create and edit playlists</li>
+      <li>Listen in the background or offline</li>
+      <li>MPRIS controls, system tray integration and desktop integration</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">com.joymusic.desktop.desktop</launchable>
+
+  <url type="homepage">https://github.com/jehadjoy15-stack/JOY-MUSIC</url>
+  <url type="bugtracker">https://github.com/jehadjoy15-stack/JOY-MUSIC/issues</url>
+
+  <developer id="com.joymusic">
+    <name>JoyMusicTeam</name>
+  </developer>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="@VERSION@" date="@DATE@"/>
+  </releases>
+</component>

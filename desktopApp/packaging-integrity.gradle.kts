@@ -20,7 +20,7 @@ val currentOperatingSystem =
     org.gradle.internal.os.OperatingSystem
         .current()
 val isArm64 =
-    providers.gradleProperty("metrolist.desktop.arch").orElse(System.getProperty("os.arch")).get().lowercase().let {
+    providers.gradleProperty("joymusic.desktop.arch").orElse(System.getProperty("os.arch")).get().lowercase().let {
         it.contains("aarch64") || it.contains("arm64")
     }
 val platform =
@@ -88,7 +88,7 @@ abstract class PatchDmgAppearanceTask : DefaultTask() {
     ) {
         val workDir =
             Files
-                .createTempDirectory(dmgFile.parentFile.toPath(), "metrolist-bg-")
+                .createTempDirectory(dmgFile.parentFile.toPath(), "joymusic-bg-")
                 .toFile()
         val rwDmg = File(workDir, "writable.dmg")
         val patchedDmg = File(workDir, "patched.dmg")
@@ -207,7 +207,7 @@ tasks
             it.name == "createReleaseDistributable" ||
             it.name.startsWith("packageRelease")
     }.configureEach {
-        if (providers.gradleProperty("metrolist.verifyPackaging").map(String::toBooleanStrict).getOrElse(true)) {
+        if (providers.gradleProperty("joymusic.verifyPackaging").map(String::toBooleanStrict).getOrElse(true)) {
             dependsOn(":shared:verifyDesktopJarIntegrity")
         }
     }
@@ -246,7 +246,7 @@ private class VerifyReleaseDistributableAction(
             "-XX:+VerifySharedSpaces",
             "-XX:+AutoCreateSharedArchive",
             "-XX:SharedArchiveFile=",
-            "-Dmetrolist.cds.cache=",
+            "-Djoymusic.cds.cache=",
         ).forEach { option ->
             check(launcherConfig.contains("java-options=$option")) { "Release launcher is missing $option" }
         }
@@ -430,7 +430,7 @@ val verifyReleaseDistributableJars =
 tasks
     .matching { it.name in setOf("assembleWindowsRelease", "packageReleaseDmg", "packageReleaseAppImage") }
     .configureEach {
-        if (providers.gradleProperty("metrolist.verifyPackaging").map(String::toBooleanStrict).getOrElse(true)) {
+        if (providers.gradleProperty("joymusic.verifyPackaging").map(String::toBooleanStrict).getOrElse(true)) {
             dependsOn(verifyReleaseDistributableJars)
         }
     }

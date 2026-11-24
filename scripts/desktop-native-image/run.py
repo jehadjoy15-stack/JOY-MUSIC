@@ -21,7 +21,7 @@ from audio import private_audio
 
 
 ROOT = Path(__file__).resolve().parents[2]
-MAIN = "com.metrolist.desktop.experiment.NativeImageMainKt"
+MAIN = "com.joymusic.desktop.experiment.NativeImageMainKt"
 
 
 def disable_core_dump():
@@ -54,14 +54,14 @@ def environment(profile):
         path = profile / kind.lower()
         path.mkdir(exist_ok=True)
         env[f"XDG_{kind}_HOME"] = str(path)
-    config = profile / "config/metrolist/settings.properties"
+    config = profile / "config/joymusic/settings.properties"
     config.parent.mkdir(exist_ok=True)
     if not config.exists():
         config.write_text("desktopOnboardingComplete=true\ndesktopOnboardingInitialized=true\n"
                           "sentryEnabled=false\nenableLogging=true\nenableDiscordIntegration=false\n")
     env.update(HOME=str(profile), DBUS_SESSION_BUS_ADDRESS="unix:path=/nonexistent-r6-bus",
-               MALLOC_ARENA_MAX="2", METROLIST_STARTUP_TRACE="1", SKIKO_RENDER_API="SOFTWARE_COMPAT",
-               LIBGL_ALWAYS_SOFTWARE="1", METROLIST_CURSOR_CONFIGURED="1")
+               MALLOC_ARENA_MAX="2", JOYMUSIC_STARTUP_TRACE="1", SKIKO_RENDER_API="SOFTWARE_COMPAT",
+               LIBGL_ALWAYS_SOFTWARE="1", JOYMUSIC_CURSOR_CONFIGURED="1")
     temporary = profile / "tmp"
     temporary.mkdir(exist_ok=True)
     env["TMPDIR"] = str(temporary)
@@ -130,7 +130,7 @@ def window_image(connection):
         if window.get_attributes().map_state != X.IsViewable:
             continue
         identity = " ".join(window.get_wm_class() or ()) + " " + str(window.get_wm_name() or "")
-        if "metrolist" not in identity.lower():
+        if "joymusic" not in identity.lower():
             continue
         size = window.get_geometry()
         if size.width < 300 or size.height < 300:
@@ -142,12 +142,12 @@ def window_image(connection):
 
 
 def release_options(config, profile):
-    cache = profile / "cache/metrolist"
-    logs = profile / "state/metrolist/logs"
+    cache = profile / "cache/joymusic"
+    logs = profile / "state/joymusic/logs"
     cache.mkdir(parents=True, exist_ok=True)
     logs.mkdir(parents=True, exist_ok=True)
-    variables = {"APPDIR": str(config.resolve().parent), "METROLIST_CDS_CACHE": str(cache),
-                 "METROLIST_JVM_ERROR_FILE": str(logs / "hs_err_pid%p.log")}
+    variables = {"APPDIR": str(config.resolve().parent), "JOYMUSIC_CDS_CACHE": str(cache),
+                 "JOYMUSIC_JVM_ERROR_FILE": str(logs / "hs_err_pid%p.log")}
 
     def expand(value):
         def replace(match):
@@ -182,14 +182,14 @@ def command(args, profile):
     options = [f"-Duser.home={profile}", f"-Djava.io.tmpdir={profile / 'tmp'}",
                "-Djava.awt.headless=false", "-Dskiko.renderApi=SOFTWARE_COMPAT"]
     if args.media is not None:
-        options += [f"-Dmetrolist.experiment.media={args.media}",
-                    f"-Dmetrolist.experiment.trigger={args.work / args.name / 'playback.trigger'}"]
+        options += [f"-Djoymusic.experiment.media={args.media}",
+                    f"-Djoymusic.experiment.trigger={args.work / args.name / 'playback.trigger'}"]
     text = (ROOT / "desktopApp/build.gradle.kts").read_text()
     block = text.split("val desktopMemoryJvmArgs =", 1)[1].split("interface ArchiveOps", 1)[0]
     memory_options = re.findall(r'"([^"\n]+)"', block)
     if args.mode == "native":
         heap = [option for option in memory_options if option.startswith(("-Xms", "-Xmx"))]
-        return [str(args.work / "image/metrolist"), f"-XX:MissingRegistrationReportingMode={args.registration_mode}",
+        return [str(args.work / "image/joymusic"), f"-XX:MissingRegistrationReportingMode={args.registration_mode}",
                 f"-Djava.home={args.work / 'image'}", *heap, *options]
     if args.jvm_config:
         packaged, classpath = release_options(args.jvm_config, profile)

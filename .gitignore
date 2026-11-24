@@ -1,5 +1,9 @@
+# Website (local only, do not push)
+website/
+
 # Gradle
 .gradle/
+
 build/
 !gradle/wrapper/gradle-wrapper.jar
 .kotlin/

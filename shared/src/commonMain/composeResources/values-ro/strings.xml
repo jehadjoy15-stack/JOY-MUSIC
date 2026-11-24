@@ -263,7 +263,7 @@
     <string name="credits_license_desc">JOY MUSIC este licențiat sub GPL-3.0</string>
     <string name="devmode_already_active" translatable="true">Modul dezvoltator este deja activat</string>
     <string name="discord_enable_rich_presence">Discord Rich Presence</string>
-    <string name="discord_listen_to_metrolist">Ascultă pe JOY MUSIC</string>
+    <string name="discord_listen_to_joymusic">Ascultă pe JOY MUSIC</string>
     <string name="discord_login_description">Conectează-ți contul de Discord</string>
     <string name="discord_rich_presence">Rich presence</string>
     <string name="discord_state">Stare</string>
@@ -488,7 +488,7 @@
     <string name="backup_restore_busy">Se lucrează…</string>
     <string name="backup_sensitive_title">Backup sensibil</string>
     <string name="backup_sensitive_message">Backupul conține cheile tale API, datele de autentificare ale contului, cookie-urile de autentificare, tokenurile de sesiune și alte informații sensibile. Oricine care intră în posesia acestui fișier îți poate accesa conturile. Păstrează-l în siguranță. Nu-l partaja niciodată.</string>
-    <string name="restore_in_progress">Se restaurează backupul tău…\nMetrolist va fi repornit automat.</string>
+    <string name="restore_in_progress">Se restaurează backupul tău…\nJoyMusic va fi repornit automat.</string>
     <string name="scrobble_tap_to_disconnect">Atinge pentru a te deconecta</string>
     <string name="scrobble_enable">Scrobbling</string>
     <string name="scrobble_now_playing">Actualizări pentru Se redă acum</string>
@@ -1383,7 +1383,7 @@
     <string name="menu_keyboard_shortcuts">Comenzi rapide la tastatură</string>
     <string name="menu_application_logs">Jurnalele aplicației</string>
     <string name="menu_report_issue">Raportează o problemă…</string>
-    <string name="menu_about_metrolist">Despre JOY MUSIC</string>
+    <string name="menu_about_joymusic">Despre JOY MUSIC</string>
     <string name="menu_song">Melodie</string>
     <string name="menu_stop">Oprire</string>
     <string name="menu_go_to_current_song">Mergi la melodia curentă</string>
@@ -1449,7 +1449,7 @@
     <string name="sensitive_backup">Backup sensibil</string>
     <string name="restore_backup_confirm">Restaurează backupul?</string>
     <string name="restore">Restaurează</string>
-    <string name="restoring_backup">Se restabilește backupul…\nMetrolist se va reporni automat.</string>
+    <string name="restoring_backup">Se restabilește backupul…\nJoyMusic se va reporni automat.</string>
     <string name="hidden_items_count">Elemente ascunse (%1$d)</string>
     <string name="hidden_library_items">Elemente ascunse din bibliotecă</string>
     <string name="delete_playlist_confirm">Ștergi playlistul?</string>
@@ -1625,7 +1625,7 @@
     <string name="tray_show_window">Arată fereastra</string>
     <string name="tray_show_miniplayer">Afișează miniplayerul</string>
     <string name="tray_settings">Setări</string>
-    <string name="tray_quit_metrolist">Ieșire din JOY MUSIC</string>
+    <string name="tray_quit_joymusic">Ieșire din JOY MUSIC</string>
     <string name="sign_in_discord">Autentifică-te la Discord</string>
     <string name="discord_sign_in_unavailable">Conectarea prin Discord nu este disponibilă</string>
     <string name="sign_in_youtube_music">Autentifică-te la YouTube Music</string>
